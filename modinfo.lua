@@ -545,8 +545,8 @@ configuration_options ={
     },
     {
         name = "randomSizeLimit",
-        label = "限制生物",
-        hover = "只对个别生物随机生物大小有效",
+        label = "去掉随机大小变化",
+        hover = "暂时只能去掉没法复写",
         options = {
             {description = "不限制", data = false},
             {description = "限制", data = true},

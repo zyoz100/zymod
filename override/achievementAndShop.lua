@@ -309,14 +309,14 @@ if achievementMaxBuy > 0 then
         local oldOnSave = self.OnSave;
         local oldOnLoad = self.OnLoad;
         function self:OnSave()
-            local res = oldOnSave();
+            local res = oldOnSave(self);
             res.totalBuyCoin = self.totalBuyCoin or 0;
             res.dayOfBuy = self.dayOfBuy or 0;
             res.dayBuyCoin = self.dayBuyCoin or 0;
             return res;
         end
         function self:OnLoad(data)
-            oldOnLoad();
+            oldOnLoad(self,data);
             self.totalBuyCoin = data.totalBuyCoin or 0;
             self.dayOfBuy = data.dayOfBuy or 0;
             self.dayBuyCoin = data.dayBuyCoin or 0;

@@ -13,6 +13,7 @@ if randomSizeEnhance > 0 then
             inst.components.health.maxhealth = inst.components.health.maxhealth * randomSizeEnhance
             inst.components.health:DoDelta(inst.components.health.maxhealth * 2)
         end
+        inst.Transform:SetScale(1,1,1)
         _G.TUNING.WARG_DAMAGE = _G.TUNING.WARG_DAMAGE * randomSizeEnhance;
         _G.TUNING.SPIDERQUEEN_DAMAGE = _G.TUNING.SPIDERQUEEN_DAMAGE * randomSizeEnhance;
         _G.TUNING.MOOSE_DAMAGE = _G.TUNING.MOOSE_DAMAGE * randomSizeEnhance;

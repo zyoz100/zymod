@@ -1,5 +1,9 @@
 local _G = GLOBAL;
 local randomSizeLimit = GetModConfigData("randomSizeLimit") or false;
+local randomSizeEnhance = GetModConfigData("randomSizeEnhance") or 0;
+if randomSizeEnhance<2 then
+    randomSizeEnhance = 2
+end
 if randomSizeLimit then
     --小型生物列表
     local a = {
@@ -435,170 +439,189 @@ if randomSizeLimit then
     }
     --特殊
     local c = {
-        "critter_dragonling",  --小龙蝇
-        "critter_glomling",  --小格罗姆
-        "critter_puppy",  --小座狼
-        "critter_kitten",  --小浣猫
-        "klaussackkey",  --麋鹿茸
-        "pumpkin",  --南瓜
-        "flower_cave",  --荧光花
-        "flower_cave_double",  --
-        "flower_cave_triple",  --
-        "critter_lamb",  --小钢羊
-        "critter_kitten",  --小浣猫
-        "critter_lamb",  --小钢羊
-        "critter_lunarmothling",  --小蛾子
-        "molebathill",  --裸鼹鼠蝙蝠山丘
-        "resurrectionstone",  --试金石
-        "rabbithole",  --兔洞
-        "glommerflower",  --格罗姆花
-        "molehill",  --鼹鼠洞
-        "critter_perdling",  --小火鸡
-        "trinket_4",  --地精爷爷
-        "trinket_13",  --地精奶奶
-        "trinket_10",  --二手假牙
-        "trinket_11",  --机器人玩偶
-        "trinket_12",  --干瘪的触手
-        "klaus_sack",  --赃物袋
-        "smallghost",  --小惊吓
-        "rock_moon",  --岩石
-        "minotaurhorn",  --守护者之角
-        "bullkelp_plant",  --公牛海带
-        "winter_ornament_light1",  --
-        "winter_ornament_light2",  --
-        "winter_ornament_light3",  --
-        "winter_ornament_light4",  --
-        "winter_ornament_light5",  --
-        "shadowheart",  --暗影心房
-        "carrat_ghostracer",  --查理的胡萝卜鼠
-        "winter_ornament_light6",  --
-        "winter_ornament_light7",  --
-        "winter_ornament_light8",  --
-        "pumpkin_lantern",  --南瓜灯
-        "cactus",  --仙人掌
-        "oasis_cactus",  --
-        "mound",  --坟墓
-        "marsh_tree",  --针刺树
-        "antlion_sinkhole",  --坑
-        "blue_mushroom",  --蓝蘑菇
-        "green_mushroom",  --绿蘑菇
-        "red_mushroom",  --红蘑菇
-        "wasphive",  --杀人蜂蜂窝
-        "watermelon",  --西瓜
-        "scorched_skeleton",  --易碎骨骼
-        "marsh_bush",  --尖刺灌木
-        "burnt_marsh_bush",  --尖刺灌木
-        "tallbirdnest",  --高脚鸟巢
-        "dragon_scales",  --鳞片
-        "grotto_pool_big",  --玻璃绿洲
-        "grotto_pool_small",  --小玻璃绿洲
-        "lightflier_flower",  --
-        "hermit_pearl",  --珍珠的珍珠
-        "hermit_cracked_pearl",  --开裂珍珠
-        "tallbirdegg",  --高脚鸟蛋
-        "beequeenhivegrown",  --巨大蜂窝
-        "beequeenhive",  --蜂蜜地块
-        "dragonflyfurnace",  --龙鳞火炉
-        "trinket_18",  --玩具木马
-        "trinket_5",  --迷你火箭
-        "moonbase",  --月亮石
-        "oasislake",  --湖泊
-        "livingtree",  --完全正常的树
-        "hotspring",  --温泉
-        "redpouch",  --红袋子
-        "redpouch_yotc",  --
-        "redpouch_yotp",  --
-        "wentacle_pillar_hole",  --
-        "gargoyle_houndatk",  --
-        "gargoyle_hounddeath",  --
-        "gargoyle_werepigatk",  --
-        "redlantern",  --红灯笼
-        "wintersfeastfuel",  --节日欢愉
-        "houndmound",  --猎犬丘
-        "bird_egg",  --鸟蛋
-        "trophyscale_fish",  --鱼类计重器
-        "cave_fern",  --蕨类植物
-        "marsh_plant",  --植物
-        "succulent_picked",  --多肉植物
-        "succulent_plant",  --多肉植物
-        "pond_algae",  --水藻
-        "cavein_boulder",  --岩石
-        "rock1",  --岩石
-        "rock2",  --岩石
-        "rock_flintless",  --岩石
-        "rock_flintless_low",  --岩石
-        "rock_flintless_med",  --岩石
-        "rock_moon_shell",  --可疑的巨石
-        "stalagmite",  --石笋
-        "stalagmite_tall",  --石笋
-        "rock_petrified_tree",  --石化树
-        "lava_pond_rock",  --岩石
-        "rubble",  --碎石
-        "statueharp",  --竖琴雕像
-        "driftwood",  --
-        "stalagmite_full",  --
-        "stalagmite_low",  --
-        "stalagmite_med",  --
-        "stalagmite_tall_full",  --
-        "stalagmite_tall_low",  --
-        "stalagmite_tall_med",  --
-        "arom",  --
-        "arong",  --
-        "arong",  --
-        "asparagus",  --芦笋
-        "carrit",  --
-        "corn",  --玉米
-        "dragonfruit",  --火龙果
-        "durian",  --榴莲
-        "eggplant",  --茄子
-        "garlic",  --大蒜
-        "onion",  --洋葱
-        "pepper",  --辣椒
-        "pomegranate",  --石榴
-        "potato",  --土豆
-        "pumpkin",  --南瓜
-        "tomato",  --番茄
-        "driftwood_small1",  --
-        "driftwood_small2",  --
-        "driftwood_tall",  --
-        "driftwood_log",  --浮木桩
-        "flower_rose",  --
-        "gravestone",  --墓碑
-        "meatrack_hermit",  --晾肉架
-        "monkeybarrel",  --穴居猴桶
-        "moose_nesting_ground",  --
-        "gargoyle_werepigdeath",  --
-        "gargoyle_werepighowl",  --
-        "livingtree_sapling",  --完全正常的树苗
-        "livingtree_halloween",  --
-        "walrus_tusk",  --海象牙
-        "tumbleweed",  --风滚草
-        "statueglommer",  --格罗姆雕像
-        "mooseegg",  --
-        "saltstack",  --盐堆
-        "pighead",  --猪头
-        "pigtorch",  --猪火炬
-        "mermhead",  --鱼人头
-        "wormlight_plant",  --神秘植物
-        "stalker_berry",  --
-        "statue_marble",  --大理石雕像
-        "reeds",  --芦苇
-        "walrus_tusk",  --海象牙
-        "stagehand",  --舞台之手
-        "batcave",  --蝙蝠洞
-        "wortox_soul",  --灵魂
-        "wortox_soul_spawn",  --
+        "critter_dragonling", --小龙蝇
+        "critter_glomling", --小格罗姆
+        "critter_puppy", --小座狼
+        "critter_kitten", --小浣猫
+        "klaussackkey", --麋鹿茸
+        "pumpkin", --南瓜
+        "flower_cave", --荧光花
+        "flower_cave_double", --
+        "flower_cave_triple", --
+        "critter_lamb", --小钢羊
+        "critter_kitten", --小浣猫
+        "critter_lamb", --小钢羊
+        "critter_lunarmothling", --小蛾子
+        "molebathill", --裸鼹鼠蝙蝠山丘
+        "resurrectionstone", --试金石
+        "rabbithole", --兔洞
+        "glommerflower", --格罗姆花
+        "molehill", --鼹鼠洞
+        "critter_perdling", --小火鸡
+        "trinket_4", --地精爷爷
+        "trinket_13", --地精奶奶
+        "trinket_10", --二手假牙
+        "trinket_11", --机器人玩偶
+        "trinket_12", --干瘪的触手
+        "klaus_sack", --赃物袋
+        "smallghost", --小惊吓
+        "rock_moon", --岩石
+        "minotaurhorn", --守护者之角
+        "bullkelp_plant", --公牛海带
+        "winter_ornament_light1", --
+        "winter_ornament_light2", --
+        "winter_ornament_light3", --
+        "winter_ornament_light4", --
+        "winter_ornament_light5", --
+        "shadowheart", --暗影心房
+        "carrat_ghostracer", --查理的胡萝卜鼠
+        "winter_ornament_light6", --
+        "winter_ornament_light7", --
+        "winter_ornament_light8", --
+        "pumpkin_lantern", --南瓜灯
+        "cactus", --仙人掌
+        "oasis_cactus", --
+        "mound", --坟墓
+        "marsh_tree", --针刺树
+        "antlion_sinkhole", --坑
+        "blue_mushroom", --蓝蘑菇
+        "green_mushroom", --绿蘑菇
+        "red_mushroom", --红蘑菇
+        "wasphive", --杀人蜂蜂窝
+        "watermelon", --西瓜
+        "scorched_skeleton", --易碎骨骼
+        "marsh_bush", --尖刺灌木
+        "burnt_marsh_bush", --尖刺灌木
+        "tallbirdnest", --高脚鸟巢
+        "dragon_scales", --鳞片
+        "grotto_pool_big", --玻璃绿洲
+        "grotto_pool_small", --小玻璃绿洲
+        "lightflier_flower", --
+        "hermit_pearl", --珍珠的珍珠
+        "hermit_cracked_pearl", --开裂珍珠
+        "tallbirdegg", --高脚鸟蛋
+        "beequeenhivegrown", --巨大蜂窝
+        "beequeenhive", --蜂蜜地块
+        "dragonflyfurnace", --龙鳞火炉
+        "trinket_18", --玩具木马
+        "trinket_5", --迷你火箭
+        "moonbase", --月亮石
+        "oasislake", --湖泊
+        "livingtree", --完全正常的树
+        "hotspring", --温泉
+        "redpouch", --红袋子
+        "redpouch_yotc", --
+        "redpouch_yotp", --
+        "wentacle_pillar_hole", --
+        "gargoyle_houndatk", --
+        "gargoyle_hounddeath", --
+        "gargoyle_werepigatk", --
+        "redlantern", --红灯笼
+        "wintersfeastfuel", --节日欢愉
+        "houndmound", --猎犬丘
+        "bird_egg", --鸟蛋
+        "trophyscale_fish", --鱼类计重器
+        "cave_fern", --蕨类植物
+        "marsh_plant", --植物
+        "succulent_picked", --多肉植物
+        "succulent_plant", --多肉植物
+        "pond_algae", --水藻
+        "cavein_boulder", --岩石
+        "rock1", --岩石
+        "rock2", --岩石
+        "rock_flintless", --岩石
+        "rock_flintless_low", --岩石
+        "rock_flintless_med", --岩石
+        "rock_moon_shell", --可疑的巨石
+        "stalagmite", --石笋
+        "stalagmite_tall", --石笋
+        "rock_petrified_tree", --石化树
+        "lava_pond_rock", --岩石
+        "rubble", --碎石
+        "statueharp", --竖琴雕像
+        "driftwood", --
+        "stalagmite_full", --
+        "stalagmite_low", --
+        "stalagmite_med", --
+        "stalagmite_tall_full", --
+        "stalagmite_tall_low", --
+        "stalagmite_tall_med", --
+        "arom", --
+        "arong", --
+        "arong", --
+        "asparagus", --芦笋
+        "carrit", --
+        "corn", --玉米
+        "dragonfruit", --火龙果
+        "durian", --榴莲
+        "eggplant", --茄子
+        "garlic", --大蒜
+        "onion", --洋葱
+        "pepper", --辣椒
+        "pomegranate", --石榴
+        "potato", --土豆
+        "pumpkin", --南瓜
+        "tomato", --番茄
+        "driftwood_small1", --
+        "driftwood_small2", --
+        "driftwood_tall", --
+        "driftwood_log", --浮木桩
+        "flower_rose", --
+        "gravestone", --墓碑
+        "meatrack_hermit", --晾肉架
+        "monkeybarrel", --穴居猴桶
+        "moose_nesting_ground", --
+        "gargoyle_werepigdeath", --
+        "gargoyle_werepighowl", --
+        "livingtree_sapling", --完全正常的树苗
+        "livingtree_halloween", --
+        "walrus_tusk", --海象牙
+        "tumbleweed", --风滚草
+        "statueglommer", --格罗姆雕像
+        "mooseegg", --
+        "saltstack", --盐堆
+        "pighead", --猪头
+        "pigtorch", --猪火炬
+        "mermhead", --鱼人头
+        "wormlight_plant", --神秘植物
+        "stalker_berry", --
+        "statue_marble", --大理石雕像
+        "reeds", --芦苇
+        "walrus_tusk", --海象牙
+        "stagehand", --舞台之手
+        "batcave", --蝙蝠洞
+        "wortox_soul", --灵魂
+        "wortox_soul_spawn", --
     }
+
+    --特殊的建筑 碰撞体积不会跟随大小变化
+    local teshujianzhu = {
+        "mock_dragonfly", "bird_mutant_spitter", "bird_mutant", "woodpecker", "carnivalgame_herding_chick", "peachtree_myth", "mk_jgb_pillar", "peach", "myth_coin", "myth_cash_tree_ground", "bigpeach", "myth_small_goldfrog", "myth_goldfrog_base", "oasislake", "pigking", "goldnugget", "stalker_minion", "stalker_minion1", "stalker_minion2", "rock1", "pigman", "pigguard", "rocky", "dirtpile", "animal_track", "moonrockseed", "chester_eyebone", "hutch_fishbowl", "krampus_sack", "redpouch_yotp", "redpouch_yotc",
+    }
+
+    local function qianghuaOverride(inst)
+        inst.myscale = 1;
+        if inst.components.health ~= nil then
+            local percent = inst.components.health:GetPercent()
+            inst.components.health:SetMaxHealth(math.ceil(inst.components.health.maxhealth * randomSizeEnhance * 2))
+            inst.components.health:SetPercent(percent)
+        end
+        if inst.components.combat then
+            inst.components.combat.defaultdamage = math.ceil(inst.components.combat.defaultdamage * randomSizeEnhance * 2)
+        end
+    end
+
     for k, v in pairs(a) do
         AddPrefabPostInit(v, function(inst)
             if not _G.TheWorld.ismastersim then
                 return inst
             end
             if table.contains(smallList, v) then
-                inst.myscale = math.random(1, 1.5);
+                qianghuaOverride(inst, 15)
             else
                 inst.myscale = 1;
             end
+
         end)
     end
 
@@ -608,7 +631,7 @@ if randomSizeLimit then
                 return inst
             end
             if table.contains(lowList, v) then
-                inst.myscale = math.random(1, 1.25);
+                qianghuaOverride(inst, 15)
             else
                 inst.myscale = 1;
             end
@@ -623,4 +646,6 @@ if randomSizeLimit then
             inst.myscale = 1;
         end)
     end
+
+
 end

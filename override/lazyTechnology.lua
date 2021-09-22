@@ -1,4 +1,4 @@
-local lazyTechKJKLimit = GetModConfigData("lazyTechKJKLimit");
+local lazyTechKJKLimit = GetModConfigData("lazyTechKJKLimit") or "";
 if lazyTechKJKLimit ~= "" then
     local disableKjk = function(inst)
         if inst.components.lrhc_wxnj then
@@ -9,7 +9,7 @@ if lazyTechKJKLimit ~= "" then
             local isHead = false;
             if isEquippable then
                 isBody = inst.components.equippable.equipslot == GLOBAL.EQUIPSLOTS.BODY;
-                isHead = inst.components.equippable.equipslot == GLOBAL.EQUIPSLOTS.HEAD
+                isHead = inst.components.equippable.equipslot == GLOBAL.EQUIPSLOTS.HEAD;
             end
             local isClothing = isEquippable and (isBody or isHead);
             local valid = false;
@@ -20,25 +20,16 @@ if lazyTechKJKLimit ~= "" then
             elseif lazyTechKJKLimit == "clothing"  then
                 valid = isClothing;
             elseif lazyTechKJKLimit == "weapon"  then
-                valid = isClothing;
+                valid = isWeapon;
+            end
+            if not valid and inst.components.lrhc_wxnj then
+                inst:RemoveComponent('lrhc_wxnj')
             end
         end
     end
-    AddComponentPostInit("fueled", function(self)
-        if self.inst then
-            disableKjk(self.inst);
-        end
-    end)
-
-    AddComponentPostInit("finiteuses", function(self)
-        if self.inst then
-            disableKjk(self.inst);
-        end
-    end)
-
-    AddComponentPostInit("armor", function(self)
-        if self.inst then
-            disableKjk(self.inst);
+    AddPrefabPostInitAny(function(inst)
+        if inst and inst.components.lrhc_wxnj then
+            disableKjk(inst);
         end
     end)
 end

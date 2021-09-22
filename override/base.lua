@@ -330,190 +330,52 @@ if baseRandomDamageLow > 0 then
     end)
 end
 
-if baseDropDisappear > 0 then
-    -- 参照Yeo的代码 https://github.com/zYeoman/DST_mod/blob/master/postinit/c_lootdropper.lua
-    AddComponentPostInit("lootdropper", function(LootDropper)
-        local oldSpawnLootPrefab = LootDropper.SpawnLootPrefab;
-        function LootDropper:SpawnLootPrefab(lootprefab, pt, linked_skinname, skin_id, userid)
-            if lootprefab ~= nil then
-                local loot = SpawnPrefab(lootprefab, linked_skinname, skin_id, userid)
-                if loot ~= nil then
-                    local CancelDisappear = function(inst)
-                        if inst._disappear then
-                            inst._disappear:Cancel()
-                        end
-                        if inst._disappear_anim then
-                            inst._disappear_anim:Cancel()
-                        end
-                        inst._disappear = nil;
-                        inst._disappear_anim = nil;
-                        inst.AnimState:SetMultColour(1, 1, 1, 0)
-                    end
-                    loot:ListenForEvent("onpickup", function()
-                        CancelDisappear(loot)
+if baseDropDisappear>0 then -- 参照Yeo的代码 https://github.com/zYeoman/DST_mod/blob/master/postinit/c_lootdropper.lua
+    local CancelDisappear = function(inst)
+        print("CancelDisappear")
+        if inst._disappear then
+            inst._disappear:Cancel()
+        end
+        if inst._disappear_anim then
+            inst._disappear_anim:Cancel()
+        end
+        inst._disappear = nil;
+        inst._disappear_anim = nil;
+        inst.AnimState:SetMultColour(1,1,1,0)
+    end
+    local disappear = function(loot)
+        loot:ListenForEvent("onpickup", function()
+            CancelDisappear(loot)
+        end)
+        loot:ListenForEvent("onputininventory", function()
+            CancelDisappear(loot)
+        end)
+        loot._disappear = loot:DoTaskInTime(baseDropDisappear, function()
+            loot:Remove()
+        end)
+        loot._disappear_anim = loot:DoTaskInTime(baseDropDisappear - 40, function()
+            for j=1,30,2 do
+                for i=10,3,-1 do
+                    loot:DoTaskInTime(j-i/10, function ()
+                        loot.AnimState:SetMultColour(i/10,i/10,i/10,i/10)
                     end)
-                    loot:ListenForEvent("onputininventory", function()
-                        CancelDisappear(loot)
+                    loot:DoTaskInTime(j+i/10, function ()
+                        loot.AnimState:SetMultColour(i/10,i/10,i/10,i/10)
                     end)
-                    loot._disappear = loot:DoTaskInTime(baseDropDisappear, function()
-                        loot:Remove()
-                    end)
-                    loot._disappear_anim = loot:DoTaskInTime(baseDropDisappear - 40, function()
-                        for j = 1, 30, 2 do
-                            for i = 10, 3, -1 do
-                                loot:DoTaskInTime(j - i / 10, function()
-                                    loot.AnimState:SetMultColour(i / 10, i / 10, i / 10, i / 10)
-                                end)
-                                loot:DoTaskInTime(j + i / 10, function()
-                                    loot.AnimState:SetMultColour(i / 10, i / 10, i / 10, i / 10)
-                                end)
-                            end
-                        end
-                        for i = 10, 3, -1 do
-                            loot:DoTaskInTime(31 - i / 10, function()
-                                loot.AnimState:SetMultColour(i / 10, i / 10, i / 10, i / 10)
-                            end)
-                        end
-                    end)
-                    return loot
                 end
             end
-            return oldSpawnLootPrefab(lootprefab, pt, linked_skinname, skin_id, userid)
+            for i=10,3,-1 do
+                loot:DoTaskInTime(31-i/10, function ()
+                    loot.AnimState:SetMultColour(i/10,i/10,i/10,i/10)
+                end)
+            end
+        end)
+    end
+    AddPrefabPostInitAny(function(inst)
+        if inst and inst.components.inventoryitem then
+            inst:ListenForEvent("on_loot_dropped", function(loot,data)
+                disappear(loot,data);
+            end)
         end
     end)
-end
-
-if true then
-    AddStategraphState(
-            "wilson",
-            State {
-                name = "oldfish_mymod_weapon_bullet",
-                tags = { "attack", "notalking", "abouttoattack", "autopredict" },
-                onenter = function(inst)
-                    local action = inst:GetBufferedAction()
-                    local target = action ~= nil and action["target"] or nil
-                    if target ~= nil then
-                        inst.AnimState:PlayAnimation("fishing_pst", false)
-                        inst.components.combat:BattleCry()
-                        if target:IsValid() then
-                            inst:FacePoint(target:GetPosition())
-                            inst.sg.statemem.attacktarget = target
-                        end
-                    end
-                    local weapon = inst.components.inventory:GetEquippedItem(_G.EQUIPSLOTS["HANDS"])
-                    local parent = weapon.components.finiteuses:GetPercent()
-                    local result = 0.1
-                    if parent < 0.7 then
-                        result = 0.2
-                    else
-                        if parent < 0.4 then
-                            result = 0.3
-                        end
-                    end
-                    inst.sg:SetTimeout(result)
-                end,
-                timeline = {
-                    _G.TimeEvent(0, function(inst)
-                        inst:DoTaskInTime(0.3 * _G.FRAMES, function()
-                            if inst.sg.currentstate.name == "oldfish_mymod_weapon_bullet" then
-                                inst:PerformBufferedAction()
-                                inst.sg:RemoveStateTag("abouttoattack")
-                            end
-                        end)
-                    end),
-                },
-                ontimeout = function(inst)
-                    inst.sg:RemoveStateTag("attack")
-                    inst.sg:AddStateTag("idle")
-                end,
-                events = {
-                    _G.EventHandler("equip", function(inst)
-                        inst.sg:GoToState("idle")
-                    end
-                    ),
-                    _G.EventHandler("unequip", function(inst)
-                        inst.sg:GoToState("idle")
-                    end),
-                    _G.EventHandler("animqueueover", function(inst)
-                        if inst["AnimState"]:AnimDone() then
-                            inst.sg:GoToState("idle")
-                        end
-                    end),
-                },
-                onexit = function(inst)
-                    inst.components["combat"]:SetTarget(nil)
-                    if inst.sg:HasStateTag("abouttoattack") then
-                        inst.components["combat"]:CancelAttack()
-                    end
-                end,
-            })
-    AddStategraphState("wilson_client",
-            State {
-                name = "oldfish_mymod_weapon_bullet",
-                tags = { "attack", "notalking", "abouttoattack", "autopredict" },
-                onenter = function(inst)
-                    local action = inst:GetBufferedAction()
-                    local target = action ~= nil and action["target"] or nil
-                    if target ~= nil then
-                        inst["AnimState"]:PlayAnimation("fishing_idle", false)
-                        local action = inst:GetBufferedAction()
-                        if action ~= nil then
-                            inst:PerformPreviewBufferedAction()
-                            if action["target"] ~= nil and action["target"]:IsValid() then
-                                inst:FacePoint(action["target"]:GetPosition())
-                                inst.sg.statemem.attacktarget = action["target"]
-                            end
-                        end
-                        local weapon = inst.components.inventory:GetEquippedItem(EQUIPSLOTS["HANDS"])
-                        local parent = weapon.components.finiteuses:GetPercent()
-                        local result = 0.1
-                        if parent < 0.7 then
-                            result = 0.2
-                        else
-                            if parent < 0.4 then
-                                result = 0.3
-                            end
-                        end
-                        inst.sg:SetTimeout(result)
-                    end
-                end,
-                onupdate = function(inst, dt)
-                    if (inst.sg.statemem.projectiledelay or 0) > 0 then
-                        inst.sg.statemem.projectiledelay = inst.sg.statemem.projectiledelay - dt
-                        if inst.sg.statemem.projectiledelay <= FRAMES then
-                            if inst.sg.statemem.projectilesound ~= nil then
-                                inst["SoundEmitter"]:PlaySound(inst.sg.statemem.projectilesound, nil, nil, true)
-                                inst.sg.statemem.projectilesound = nil
-                            end
-                            if inst.sg.statemem.projectiledelay <= 0 then
-                                inst:ClearBufferedAction()
-                                inst.sg:RemoveStateTag("abouttoattack")
-                            end
-                        end
-                    end
-                end,
-                timeline = {
-                    TimeEvent(0, function(inst)
-                    inst:DoTaskInTime(0.3 * FRAMES, function()
-                        if inst.sg.currentstate.name == "oldfish_mymod_weapon_bullet" then
-                            inst:ClearBufferedAction()
-                            inst.sg:RemoveStateTag("abouttoattack")
-                        end
-                    end)
-                end), },
-                ontimeout = function(inst)
-                    inst.sg:RemoveStateTag("abouttoattack")
-                    inst.sg:RemoveStateTag("attack")
-                    inst.sg:AddStateTag("idle")
-                end,
-                events = { EventHandler("animqueueover", function(inst)
-                    if inst["AnimState"]:AnimDone() then
-                        inst.sg:GoToState("idle")
-                    end
-                end), },
-                onexit = function(inst)
-                    if inst.sg:HasStateTag("abouttoattack") and inst["replica"]["combat"] ~= nil then
-                        inst["replica"]["combat"]:CancelAttack()
-                    end
-                end, })
 end
