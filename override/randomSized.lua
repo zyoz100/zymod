@@ -599,6 +599,10 @@ if randomSizeLimit then
         "mock_dragonfly", "bird_mutant_spitter", "bird_mutant", "woodpecker", "carnivalgame_herding_chick", "peachtree_myth", "mk_jgb_pillar", "peach", "myth_coin", "myth_cash_tree_ground", "bigpeach", "myth_small_goldfrog", "myth_goldfrog_base", "oasislake", "pigking", "goldnugget", "stalker_minion", "stalker_minion1", "stalker_minion2", "rock1", "pigman", "pigguard", "rocky", "dirtpile", "animal_track", "moonrockseed", "chester_eyebone", "hutch_fishbowl", "krampus_sack", "redpouch_yotp", "redpouch_yotc",
     }
 
+    local shss = {
+        "peachtree_myth","mk_jgb_pillar","peach","myth_coin","myth_cash_tree_ground","bigpeach","myth_small_goldfrog","myth_goldfrog_base",
+    }
+
     local function qianghuaOverride(inst)
         inst.myscale = 1;
         if inst.components.health ~= nil then
@@ -639,6 +643,15 @@ if randomSizeLimit then
     end
 
     for k, v in pairs(c) do
+        AddPrefabPostInit(v, function(inst)
+            if not _G.TheWorld.ismastersim then
+                return inst
+            end
+            inst.myscale = 1;
+        end)
+    end
+
+    for k, v in pairs(shss) do
         AddPrefabPostInit(v, function(inst)
             if not _G.TheWorld.ismastersim then
                 return inst

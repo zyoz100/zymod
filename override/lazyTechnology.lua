@@ -1,5 +1,5 @@
 local lazyTechKJKLimit = GetModConfigData("lazyTechKJKLimit") or "";
-if lazyTechKJKLimit ~= "" then
+if lazyTechKJKLimit then
     local disableKjk = function(inst)
         if inst.components.lrhc_wxnj then
             local isEquippable = inst.components.equippable ~= nil;

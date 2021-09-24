@@ -360,7 +360,7 @@ if achievementMaxBuy > 0 then
         end
         local discount = player.components.seplayerstatus.discount;
         local cycles = GLOBAL.TheWorld.state.cycles or 1;
-        local age = player.components.age:GetAgeInDays() or 1;
+        local age = (player.components.age:GetAgeInDays() or 0) + 1;
         local cost = iprice * discount * amount;
         if achievementMaxBuyMode == 0 then
             if iiname == "achievementsecoin" then

@@ -417,16 +417,6 @@ configuration_options ={
         default = true
     },
     {
-        name = "sora2swordEnhance",
-        label = "武器加强",
-        hover = "禁止穹打包一些独有的东西，比如猪王等。",
-        options = {
-            {description = "限制", data = true},
-            {description = "不限制", data = false},
-        },
-        default = true
-    },
-    {
         name = "carney",
         label = "卡尼猫",
         options = {{description = "", data = ""}},
@@ -529,7 +519,7 @@ configuration_options ={
         label = "锟斤拷限制",
         hover = "进行进一步限制",
         options = {
-            {description = "不限制", data = ""},
+            {description = "不限制", data = false},
             {description = "仅对可装备的物品有效", data = "equipment"},
             {description = "仅对武器和衣物有效", data = "weaponAndClothing"},
             {description = "仅对衣物有效", data = "clothing"},
