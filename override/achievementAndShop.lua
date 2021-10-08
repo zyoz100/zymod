@@ -4,6 +4,13 @@ local soraSellPriceByLevel = GetModConfigData("soraSellPriceByLevel") or false;
 local achievementGetMorePoints = GetModConfigData("achievementGetMorePoints") or 0;
 local achievementMaxBuy = GetModConfigData("achievementMaxBuy") or 0;
 local achievementMaxBuyMode = GetModConfigData("achievementMaxBuyMode") or 0
+local achievementMaxBuyRate = GetModConfigData("achievementMaxBuyRate")
+if type(achievementMaxBuyRate) ~= "number" then
+    achievementMaxBuyRate = 0.01
+end
+if achievementMaxBuyRate < 0 then
+    achievementMaxBuyRate = 0.01
+end
 
 if (canNotSellItemsBySora or canNotSellItemsBySora or soraSellPriceByLevel) and GLOBAL.isModEnableById("1638724235") then
     AddPrefabPostInit("goldstaff", function(inst)
@@ -305,7 +312,7 @@ end
 if achievementMaxBuy > 0 then
     local namespace = "SimpleEconomy";
     local buyHandle = GLOBAL.MOD_RPC_HANDLERS[namespace][GLOBAL.MOD_RPC[namespace]["buy_fix"].id];
-    AddComponentPostInit("seplayerstatus",function(self)
+    AddComponentPostInit("seplayerstatus", function(self)
         local oldOnSave = self.OnSave;
         local oldOnLoad = self.OnLoad;
         function self:OnSave()
@@ -316,7 +323,7 @@ if achievementMaxBuy > 0 then
             return res;
         end
         function self:OnLoad(data)
-            oldOnLoad(self,data);
+            oldOnLoad(self, data);
             self.totalBuyCoin = data.totalBuyCoin or 0;
             self.dayOfBuy = data.dayOfBuy or 0;
             self.dayBuyCoin = data.dayBuyCoin or 0;
@@ -360,7 +367,7 @@ if achievementMaxBuy > 0 then
         end
         local discount = player.components.seplayerstatus.discount;
         local cycles = GLOBAL.TheWorld.state.cycles or 1;
-        local age = player.components.age:GetAgeInDays() or 1;
+        local age = (player.components.age:GetAgeInDays() or 0) + 1;
         local cost = iprice * discount * amount;
         if achievementMaxBuyMode == 0 then
             if iiname == "achievementsecoin" then
@@ -369,7 +376,7 @@ if achievementMaxBuy > 0 then
                     cost = 0;
                 end
             end
-            local maxBuy = math.ceil((1 + cycles / 100) * achievementMaxBuy * 1000);
+            local maxBuy = math.ceil((1 + cycles * achievementMaxBuyRate) * achievementMaxBuy * 1000);
             local dayOfBuy = (player.components.seplayerstatus.dayOfBuy or 0)
             if dayOfBuy ~= GLOBAL.TheWorld.state.cycles then
                 player.components.seplayerstatus.dayBuyCoin = 0;
@@ -383,9 +390,9 @@ if achievementMaxBuy > 0 then
                 buyHandle(player, i, title, more);
             end
         elseif achievementMaxBuyMode == 1 then
-            local maxBuy = math.ceil((age + age * age/200) * achievementMaxBuy * 1000); --偷懒算法
+            local maxBuy = math.ceil((age + age * age * achievementMaxBuyRate / 2 ) * achievementMaxBuy * 1000); --偷懒算法
             local totalBuyCoin = (player.components.seplayerstatus.totalBuyCoin or 0)
-            if  totalBuyCoin > maxBuy then
+            if totalBuyCoin > maxBuy then
                 player.components.talker:Say("您已经消费到上限（" .. totalBuyCoin .. "/" .. maxBuy .. "）")
             else
                 player.components.seplayerstatus.totalBuyCoin = totalBuyCoin + cost;

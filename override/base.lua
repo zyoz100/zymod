@@ -3,6 +3,7 @@ local baseCombatCanAttackDeath = GetModConfigData("baseCombatCanAttackDeath") or
 local baseBossGrowth = GetModConfigData("baseBossGrowth") or 2;
 local baseRandomDamageLow = GetModConfigData("baseRandomDamageLow") or 0;
 local baseDropDisappear = GetModConfigData("baseDropDisappear") or 0;
+local baseReduceAnnounce = GetModConfigData("baseReduceAnnounce") or 0;
 if baseCombatCanAttackDeath then
     AddComponentPostInit("combat", function(self)
         -- 我是伞兵 不会hook
@@ -330,9 +331,9 @@ if baseRandomDamageLow > 0 then
     end)
 end
 
-if baseDropDisappear>0 then -- 参照Yeo的代码 https://github.com/zYeoman/DST_mod/blob/master/postinit/c_lootdropper.lua
+if baseDropDisappear > 0 then
+    -- 参照Yeo的代码 https://github.com/zYeoman/DST_mod/blob/master/postinit/c_lootdropper.lua
     local CancelDisappear = function(inst)
-        print("CancelDisappear")
         if inst._disappear then
             inst._disappear:Cancel()
         end
@@ -341,7 +342,7 @@ if baseDropDisappear>0 then -- 参照Yeo的代码 https://github.com/zYeoman/DST
         end
         inst._disappear = nil;
         inst._disappear_anim = nil;
-        inst.AnimState:SetMultColour(1,1,1,0)
+        inst.AnimState:SetMultColour(1, 1, 1, 1)
     end
     local disappear = function(loot)
         loot:ListenForEvent("onpickup", function()
@@ -354,28 +355,59 @@ if baseDropDisappear>0 then -- 参照Yeo的代码 https://github.com/zYeoman/DST
             loot:Remove()
         end)
         loot._disappear_anim = loot:DoTaskInTime(baseDropDisappear - 40, function()
-            for j=1,30,2 do
-                for i=10,3,-1 do
-                    loot:DoTaskInTime(j-i/10, function ()
-                        loot.AnimState:SetMultColour(i/10,i/10,i/10,i/10)
+            for j = 1, 30, 2 do
+                for i = 10, 3, -1 do
+                    loot:DoTaskInTime(j - i / 10, function()
+                        loot.AnimState:SetMultColour(i / 10, i / 10, i / 10, i / 10)
                     end)
-                    loot:DoTaskInTime(j+i/10, function ()
-                        loot.AnimState:SetMultColour(i/10,i/10,i/10,i/10)
+                    loot:DoTaskInTime(j + i / 10, function()
+                        loot.AnimState:SetMultColour(i / 10, i / 10, i / 10, i / 10)
                     end)
                 end
             end
-            for i=10,3,-1 do
-                loot:DoTaskInTime(31-i/10, function ()
-                    loot.AnimState:SetMultColour(i/10,i/10,i/10,i/10)
+            for i = 10, 3, -1 do
+                loot:DoTaskInTime(31 - i / 10, function()
+                    loot.AnimState:SetMultColour(i / 10, i / 10, i / 10, i / 10)
                 end)
             end
         end)
     end
     AddPrefabPostInitAny(function(inst)
         if inst and inst.components.inventoryitem then
-            inst:ListenForEvent("on_loot_dropped", function(loot,data)
-                disappear(loot,data);
+            inst:ListenForEvent("on_loot_dropped", function(loot, data)
+                disappear(loot, data);
             end)
         end
     end)
+end
+
+if baseReduceAnnounce > 0 then
+    _G.announceList = {}
+    local net = getmetatable(TheNet)
+    local oldAnnounce = TheNet.Announce
+    net.__index.Announce = function(Net, text, ...)
+        local valid = true;
+        local announceList = {}
+        for k, v in ipairs(_G.announceList) do
+            if _G.GetTime() - v.time < baseReduceAnnounce then
+                table.insert(announceList, v)
+            end
+        end
+
+        for k, v in ipairs(announceList) do
+            if v.text == text then
+                valid = false
+            end
+        end
+        if valid then
+            _G.announceList = announceList
+            table.insert(announceList, {
+                time = _G.GetTime(),
+                text = text,
+            })
+            return oldAnnounce(Net, text, ...)
+        else
+            _G.announceList = announceList
+        end
+    end
 end
