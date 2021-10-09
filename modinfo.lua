@@ -1,7 +1,7 @@
 name = "zy'mod"
 description = "服务器自用"
 author = "zy"
-version = "0.32"
+version = "0.36"
 
 forumthread = ""
 
@@ -78,6 +78,19 @@ configuration_options ={
             {description = "5天后消失", data = 5*8*60},
         },
         default = 4*60
+    },
+    {--
+        name = "baseReduceAnnounce",
+        label = "优化重复宣告导致的刷屏",
+        hover = "统一文本宣告只会在设定值内显示一次",
+        options = {
+            {description = "关闭", data = 0},
+            {description = "1s内", data = 1},
+            {description = "5s内", data = 5},
+            {description = "10s内", data = 10},
+            {description = "20s内", data = 20},
+        },
+        default = 5
     },
     {
         name = "myth",
@@ -166,7 +179,7 @@ configuration_options ={
     {
         name = "achievementMaxBuy",
         label = "限制消费",
-        hover = "避免购买过多东西,每天上限系数为设置值*（1+天数/100）",
+        hover = "避免购买过多东西,每天上限系数为设置值*（1+消费增长系数*天数）",
         options = {
             {description = "关闭", data = 0},
             {description = "1000", data = 1},
@@ -177,6 +190,24 @@ configuration_options ={
             {description = "50000", data = 50},
         },
         default = 10
+    },
+    {
+        name = "achievementMaxBuyRate",
+        label = "限制消费增长系数",
+        options = {
+            {description = "不增长", data = 0},
+            {description = "1%", data = 0.01},
+            {description = "2%", data = 0.02},
+            {description = "5%", data = 0.05},
+            {description = "10%", data = 0.1},
+            {description = "20%", data = 0.2},
+            {description = "25%", data = 0.25},
+            {description = "40%", data = 0.4},
+            {description = "50%", data = 0.5},
+            {description = "75%", data = 0.75},
+            {description = "100%", data = 1},
+        },
+        default = 0.01
     },
     {
         name = "achievementMaxBuyMode",

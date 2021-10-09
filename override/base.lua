@@ -332,6 +332,7 @@ end
 
 if baseDropDisappear>0 then -- 参照Yeo的代码 https://github.com/zYeoman/DST_mod/blob/master/postinit/c_lootdropper.lua
     local CancelDisappear = function(inst)
+        print("CancelDisappear")
         if inst._disappear then
             inst._disappear:Cancel()
         end
@@ -340,7 +341,7 @@ if baseDropDisappear>0 then -- 参照Yeo的代码 https://github.com/zYeoman/DST
         end
         inst._disappear = nil;
         inst._disappear_anim = nil;
-        inst.AnimState:SetMultColour(1,1,1,1)
+        inst.AnimState:SetMultColour(1, 1, 1, 1)
     end
     local disappear = function(loot)
         loot:ListenForEvent("onpickup", function()
