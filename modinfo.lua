@@ -448,6 +448,16 @@ configuration_options ={
         default = true
     },
     {
+        name = "soraPackFL",
+        label = "打包风铃草",
+        hover = "初始自动打包风铃",
+        options = {
+            {description = "打包", data = true},
+            {description = "不打包", data = false},
+        },
+        default = true
+    },
+    {
         name = "carney",
         label = "卡尼猫",
         options = {{description = "", data = ""}},
