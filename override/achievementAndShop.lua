@@ -5,6 +5,7 @@ local achievementGetMorePoints = GetModConfigData("achievementGetMorePoints") or
 local achievementMaxBuy = GetModConfigData("achievementMaxBuy") or 0;
 local achievementMaxBuyMode = GetModConfigData("achievementMaxBuyMode") or 0
 local achievementMaxBuyRate = GetModConfigData("achievementMaxBuyRate")
+local achievementShowInfo = GetModConfigData("achievementShowInfo") or false
 if type(achievementMaxBuyRate) ~= "number" then
     achievementMaxBuyRate = 0.01
 end
@@ -390,7 +391,7 @@ if achievementMaxBuy > 0 then
                 buyHandle(player, i, title, more);
             end
         elseif achievementMaxBuyMode == 1 then
-            local maxBuy = math.ceil((age + age * age * achievementMaxBuyRate / 2 ) * achievementMaxBuy * 1000); --偷懒算法
+            local maxBuy = math.ceil((age + age * age * achievementMaxBuyRate / 2) * achievementMaxBuy * 1000); --偷懒算法
             local totalBuyCoin = (player.components.seplayerstatus.totalBuyCoin or 0)
             if totalBuyCoin > maxBuy then
                 player.components.talker:Say("您已经消费到上限（" .. totalBuyCoin .. "/" .. maxBuy .. "）")
@@ -399,6 +400,35 @@ if achievementMaxBuy > 0 then
                 buyHandle(player, i, title, more);
             end
         end
+    end
+end
+
+if achievementShowInfo then
+    local OldNetworking_Say = GLOBAL.Networking_Say
+    GLOBAL.Networking_Say = function(guid, userid, name, prefab, message, colour, whisper, isemote)
+        local r = OldNetworking_Say(guid, userid, name, prefab, message, colour, whisper, isemote);
+        local player = GLOBAL.Ents[guid]
+        if string.sub(message, 1, 1) == "#" then
+            local code = string.sub(message, 2)
+            if code == "info" then
+                local msg = "";
+                local cycles = GLOBAL.TheWorld.state.cycles or 1;
+                local age = (player.components.age:GetAgeInDays() or 0) + 1;
+                if achievementMaxBuy and player.components.seplayerstatus then
+                    if achievementMaxBuyMode == 0 then
+                        msg = msg .. string.format("当日消费信息：%d/%d",player.components.seplayerstatus.dayBuyCoin or 0,math.ceil((1 + cycles * achievementMaxBuyRate) * achievementMaxBuy * 1000))
+                    else
+                        msg = msg .. string.format("消费信息：%d/%d",player.components.seplayerstatus.totalBuyCoin or 0,math.ceil((age + age * age * achievementMaxBuyRate / 2) * achievementMaxBuy * 1000))
+                    end
+                end
+
+                if msg == "" then
+                    msg = "没啥可以显示的！"
+                end
+                player.components.talker:Say(msg,5)
+            end
+        end
+        return r;
     end
 end
 

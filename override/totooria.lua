@@ -5,6 +5,7 @@ local totooriaMultipleStewerFur = GetModConfigData("totooriaMultipleStewerFur") 
 local totooriaPhilosopherstoneEatLimit = GetModConfigData("totooriaPhilosopherstoneEatLimit") or 0;
 local totooriaPhilosopherstoneKJKLimit = GetModConfigData("totooriaPhilosopherstoneKJKLimit") or false;
 local totooriaPhilosopherstoneLimit = GetModConfigData("totooriaPhilosopherstoneLimit") or false
+local totooriaStaffRandomDamage = GetModConfigData("totooriaStaffRandomDamage") or 0
 
 --	托托莉
 --		多倍收锅
@@ -61,7 +62,7 @@ if totooriaMultipleStewer > 0 then
                                         end
                                     end
                                     count = math.floor(count / totooriaMultipleStewer);
-                                    count = math.max(count,2);
+                                    count = math.max(count, 2);
                                     for i = 1, count - 1 do
                                         stewerFood(harvester, self)
                                     end
@@ -122,7 +123,7 @@ if totooriaMultipleStewerFur and totooriaMultipleStewer > 0 then
                                 end
                             end
                             count = math.floor(count / totooriaMultipleStewer / 3)
-                            count = math.max(count,2);
+                            count = math.max(count, 2);
                             for i = 1, count do
                                 stewerFurFood(picker, self)
                             end
@@ -138,7 +139,7 @@ if totooriaPhilosopherstoneEatLimit == true then
     totooriaPhilosopherstoneEatLimit = 1;
 end
 
-if totooriaPhilosopherstoneEatLimit>0 then
+if totooriaPhilosopherstoneEatLimit > 0 then
     AddPrefabPostInit("philosopherstone", function(inst)
         if inst ~= nil and
                 inst.components ~= nil and
@@ -186,12 +187,12 @@ if totooriaPhilosopherstoneEatLimit>0 then
                         value = math.ceil((hunger + sanity + health) * .04)
                     end
 
-                    local multiplier= 1;
+                    local multiplier = 1;
                     if owner.components.totooriastatus then
                         multiplier = 2
                     end
 
-                    DeltaUse(inst, math.min( 20 * totooriaPhilosopherstoneEatLimit, value) * multiplier, owner)
+                    DeltaUse(inst, math.min(20 * totooriaPhilosopherstoneEatLimit, value) * multiplier, owner)
                     checkspeak(inst, owner)
                     if owner.components.eater.oldttreatfn then
                         return owner.components.eater.oldttreatfn(owner, food)
@@ -221,31 +222,112 @@ if totooriaPhilosopherstoneKJKLimit then
 end
 
 --武器攻击范围随装备角色的脑残上限变化
-local function rangechange(inst)
-    if inst.components.inventoryitem.owner ~= nil then
-        if inst.components.inventoryitem.owner.components.sanity then
-            local ownersanity = inst.components.inventoryitem.owner.components.sanity.max
-            local rangemodifer = math.min(((ownersanity / 200) ^ 4 + 1) / 1.5, 20)
-            inst.components.weapon:SetRange(rangemodifer, rangemodifer + 2)
+
+local rangechange;
+if totooriaStaffRandomDamage then
+    rangechange = function(inst)
+        if inst.components.inventoryitem.owner ~= nil then
+            if inst.components.inventoryitem.owner.components.sanity then
+                local ownersanity = inst.components.inventoryitem.owner.components.sanity.max
+                local rangemodifer = math.min(((ownersanity / 200) ^ 4 + 1) / 1.5, 20)
+                inst.components.weapon:SetRange(rangemodifer, rangemodifer + 2)
+            end
+        end
+    end
+else
+    rangechange = function(inst)
+        if inst.components.inventoryitem.owner ~= nil then
+            local owner = inst.components.inventoryitem.owner; --武器持有者
+            local sanityRate = 0;
+            local sanityNumber = 0;
+            local healthRate = 0;
+            local healthNumber = 0;
+            local hungerRate = 0;
+            local hungerNumber = 0;
+            if owner.components.sanity then
+                local ownerSanityMax = owner.components.sanity.max or 0;
+                local ownerSanityCurrent = owner.components.sanity.current or 0;
+                local rangeModifier = math.min(((ownerSanityMax / 200) ^ 4 + 1) / 1.5, 20)
+                inst.components.weapon:SetRange(rangeModifier, rangeModifier + 2)
+                sanityNumber = ownerSanityMax - ownerSanityCurrent;
+                if ownerSanityMax > 0 then
+                    sanityRate = sanityNumber / ownerSanityMax;
+                else
+                    sanityRate = 0;
+                end
+
+            end
+            if owner.components.health then
+                local ownerHealthMax = owner.components.health.maxhealth or 0;
+                local ownerHealthCurrent = owner.components.health.currenthealth or 0;
+                healthNumber = ownerHealthMax - ownerHealthCurrent;
+                if ownerHealthMax > 0 then
+                    healthRate = healthNumber / ownerHealthMax;
+                else
+                    healthRate = 0;
+                end
+            end
+            if owner.components.hunger then
+                local ownerHungerMax = owner.components.health.max or 0;
+                local ownerHungerCurrent = owner.components.health.current or 0;
+                hungerNumber = ownerHungerMax - ownerHungerCurrent;
+                if ownerHungerMax > 0 then
+                    hungerRate = hungerNumber / ownerHungerMax;
+                else
+                    hungerRate = 0;
+                end
+            end
+            --计算伤害
+            local proportion = {
+                san = 0.1,
+                health = 0.6,
+                hunger = 0.3
+            }
+            local rate = proportion.san * sanityRate + proportion.health * healthRate + proportion.hunger * hungerRate;
+            local num = proportion.san * sanityNumber + proportion.health * healthNumber + proportion.hunger * hungerNumber;
+            inst.components.weapon:setDamage(math.ceil(totooriaStaffRandomDamage * 100 * rate ^ 5) + 17);
+            if owner.components.combat then
+                local max = (1 + num / 1000) * 2
+                owner.components.combat.externaldamagemultipliers:SetModifier("zy_t_staff", max * math.random())
+            end
         end
     end
 end
 
-local setRange = function(inst)
+local totooriastaffPostInit = function(inst)
     if inst ~= nil and
             inst.components ~= nil and
-            inst.components.equippable ~= nil and
-            inst.components.equippable.onequipfn ~= nil then
+            inst.components.equippable ~= nil then
         local oldonequipfn = inst.components.equippable.onequipfn;
         inst.components.equippable.onequipfn = function(inst, owner)
-            oldonequipfn(inst, owner)
+            if oldonequipfn then
+                oldonequipfn(inst, owner)
+            end
             rangechange(inst)
         end
+
+        local oldonunequipfn = inst.components.equippable.onunequipfn;
+        inst.components.equippable.onunequipfn = function(inst, owner)
+            if oldonunequipfn then
+                oldonunequipfn(inst, owner)
+            end
+            owner.components.combat.externaldamagemultipliers:SetModifier("zy_t_staff", 1)
+        end
+    end
+    if inst ~= nil and
+            inst.components ~= nil and
+            inst.components.weapon ~= nil and
+            inst.components.weapon.onattack ~= nil then
+        local oldonattack = inst.components.weapon.onattack;
+        inst.components.weapon:SetOnAttack(function(weapon, ...)
+            oldonattack(weapon, ...)
+            rangechange(weapon)
+        end)
     end
 end
+AddPrefabPostInit("totooriastaff5green", totooriastaffPostInit)
+AddPrefabPostInit("totooriastaff5orange", totooriastaffPostInit)
+AddPrefabPostInit("totooriastaff5yellow", totooriastaffPostInit)
+AddPrefabPostInit("totooriastaff3", totooriastaffPostInit)
+AddPrefabPostInit("totooriastaff4", totooriastaffPostInit)
 
-AddPrefabPostInit("totooriastaff5green", setRange)
-AddPrefabPostInit("totooriastaff5orange", setRange)
-AddPrefabPostInit("totooriastaff5yellow", setRange)
-AddPrefabPostInit("totooriastaff3", setRange)
-AddPrefabPostInit("totooriastaff4", setRange)

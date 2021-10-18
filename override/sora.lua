@@ -28,7 +28,6 @@ if soraRemoveRollExpByLevel > 0 then
             function(self)
                 __GetExp = self.GetExp;
                 function self:GetExp(userid)
-                    print("hook")
                     local level = GLOBAL.exptolev(self.exps[userid] or 0);
                     local loseExp = level >= soraRemoveRollExpByLevel and 0 or 1000;
                     return userid and self.exps[userid] and math.max(0, self.exps[userid] - loseExp) or -1
@@ -188,7 +187,6 @@ if soraPackLimit then
         if inst and inst.components and inst.components.sorapacker then
             local oldCanPackFn = inst.components.sorapacker.canpackfn
             inst.components.sorapacker:SetCanPackFn(function(target, inst2)
-                print("new"..target.prefab)
                 if target:HasTag("multiplayer_portal") --天体门
                     or target.prefab == "pigking" --猪王
                     or target.prefab == "beequeenhivegrown"--蜂王窝-底座

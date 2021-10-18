@@ -71,14 +71,18 @@ if _G.isModEnableById("2299268435") then
     modimport("override/randomSizedData")
 end
 
---[[
-    待办清单：
-        物品清理：借用强力清理的mod代码，加入指令清理，缩短清理时间（20天一次=》1天一次）
-        简单复刻诸神的的武器机制
-]]
+--legion
+if _G.isModEnableById("1392778117") then
+    modimport("override/legion")
+end
 
-
-
+--错误追踪
+bugtracker_config = {
+    email = "zyoz300@163.com",
+    upload_client_log = true,
+    upload_server_log = true,
+    upload_other_mods_crash_log = true,
+}
 
 
 

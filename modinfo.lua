@@ -220,6 +220,15 @@ configuration_options ={
         default = 0
     },
     {
+        name = "achievementShowInfo",
+        label = "右键打折券显示一些信息",
+        options = {
+            {description = "显示", data = true},
+            {description = "不显示", data = false},
+        },
+        default = true
+    },
+    {
         name = "totooria",
         label = "托托莉",
         options = {{description = "", data = ""}},
@@ -297,6 +306,18 @@ configuration_options ={
             {description = "限制", data = true},
         },
         default = true
+    },
+    {
+        name = "totooriaStaffRandomDamage",
+        label = "法杖的伤害变成随机伤害攻击",
+        hover = "伤害与三围缺失数值相关，攻击变为随机攻击",
+        options = {
+            {description = "不加强", data = 0},
+            {description = "微弱加强", data = 1},
+            {description = "一般加强", data = 3},
+            {description = "大加强", data = 5},
+        },
+        default = 3
     },
     {
         name = "chogath",
@@ -589,11 +610,28 @@ configuration_options ={
         label = "生物加强",
         hover = "数据包情况下进一步进行加强",
         options = {
-            {description = "加强", data = 0},
+            {description = "不加强", data = 0},
             {description = "简单加强", data = 2},
             {description = "一般加强", data = 3},
             {description = "bt加强", data = 5},
+            {description = "抖m", data = 25},
+            {description = "蝴蝶杀人事件！", data = 50},
         },
         default = 2
+    },
+    {
+        name = "legion",
+        label = "棱镜",
+        options = {{description = "", data = ""}},
+        default = ""
+    },
+    {
+        name = "legionDisableNat",
+        label = "是否禁止作物生成害虫",
+        options = {
+            {description = "禁止", data = true},
+            {description = "原版", data = false},
+        },
+        default = true
     },
 }
