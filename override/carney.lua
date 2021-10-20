@@ -22,29 +22,6 @@ if carneyUseSetGold then
     end)
 
 
-
-
-    AddComponentPostInit("windyknifestatus", function(self)
-        self.level2 = 0
-        function self:OnSave()
-            local data = {
-                level2 = self.level2 or self.level,
-                use = self.use,
-            }
-            return data
-        end
-
-        function self:OnLoad(data)
-            self.level2 = data.level2 or data.level or  0
-            self.use = data.use or 0
-        end
-
-        function self:DoDeltaLevel(delta)
-            self.level2 = self.level2 + delta
-            self.inst:PushEvent("DoDeltaLevelWindyKnife")
-        end
-    end)
-
     local function ItemTradeTest(inst, item)
         if item == nil then
             return false
@@ -58,7 +35,7 @@ if carneyUseSetGold then
         local levelUpCost = 9999;
         local repairCost = math.ceil((1 - inst.components.finiteuses.current / inst.components.finiteuses.total) * 100 / 20);
         if carneyWindyKnifeMaxDamage and carneyWindyKnifeMaxDamage > 0 then
-            return math.ceil(((carneyWindyKnifeMaxDamage - wkBaseDamage) * carneyGoldPerDamage - inst.components.windyknifestatus.level2))
+            return math.ceil(((carneyWindyKnifeMaxDamage - wkBaseDamage) * carneyGoldPerDamage - inst.components.windyknifestatus.level))
         else
             return 9999
         end
@@ -69,7 +46,7 @@ if carneyUseSetGold then
     end
 
     local function valuecheck(inst)
-        local level = inst.components.windyknifestatus.level2
+        local level = inst.components.windyknifestatus.level
         local damage = wkBaseDamage + math.floor(level/carneyGoldPerDamage);
         if carneyWindyKnifeMaxDamage >0  then
             damage = math.min(carneyWindyKnifeMaxDamage,damage);
@@ -84,7 +61,7 @@ if carneyUseSetGold then
         if m <= 1 then m = 1 end
         inst.components.tool:SetAction(GLOBAL.ACTIONS.CHOP, 15/m)
         if carneyWindyKnifeMaxDamage and carneyWindyKnifeMaxDamage>0  then
-            if inst.components.windyknifestatus.level2 >= (carneyWindyKnifeMaxDamage - wkBaseDamage) * carneyGoldPerDamage  and inst.components.finiteuses then
+            if inst.components.windyknifestatus.level >= (carneyWindyKnifeMaxDamage - wkBaseDamage) * carneyGoldPerDamage  and inst.components.finiteuses then
                 inst.components.finiteuses.current = inst.components.finiteuses.total
                 inst:RemoveComponent("finiteuses")
                 inst:RemoveComponent("trader")
@@ -115,12 +92,11 @@ if carneyUseSetGold then
             repair(inst,stacksize * 20)
         end
     end
-
+    up.Set(Prefabs.windyknife.fn, "valuecheck", valuecheck, 'windyknife.lua')
     AddPrefabPostInit("windyknife", function(inst)
         inst.cantrader = TraderCount
         inst.components.trader:SetAcceptTest(ItemTradeTest)
         inst.components.trader.onaccept = OnGemGiven
-        inst:DoTaskInTime(1, function() valuecheck(inst) end)
     end)
 
 end

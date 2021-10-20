@@ -50,4 +50,17 @@ end
 
 GLOBAL.AddLaterFnCopy = AddLaterFnCopy;
 
+local isNumber = function(num)
+    return type(num) == "number"
+end
+
+local isString = function(num)
+    return type(num) == "string"
+end
+
+GLOBAL.ZyUtil = {
+    isNumber = isNumber,
+    isString = isString
+}
+
 

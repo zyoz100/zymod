@@ -2,7 +2,6 @@ local _G = GLOBAL
 local mythBlackBearRockClearTime = GetModConfigData("mythBlackBearRockClearTime") or 0
 local mythFlyingSpeedMultiplier = GetModConfigData("mythFlyingSpeedMultiplier") or 0
 
--- inst._soratalk:Cancel()
 if mythBlackBearRockClearTime > 0 then
     AddPrefabPostInit("blackbear_rock", function(inst)
         -- 黑熊岩石清理

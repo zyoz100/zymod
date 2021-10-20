@@ -433,7 +433,7 @@ configuration_options ={
     {
         name = "soraDoubleMaker",
         label = "一定等级解锁双倍制作",
-        hover = "",
+        hover = "平行世界里偷不算偷！",
         options = {
             {description = "不改变", data = -1},
             {description = "一开始", data = 0},
@@ -631,6 +631,25 @@ configuration_options ={
         options = {
             {description = "禁止", data = true},
             {description = "原版", data = false},
+        },
+        default = true
+    },
+    {
+        name = "yuanzi",
+        label = "乃木园子",
+        options = {{description = "", data = ""}},
+        default = ""
+    },
+    {
+        name = "flyknifeGiveNum",
+        label = "花刃一次做多个",
+        options = {
+            {description = "原版", data = 0},
+            {description = "2个", data = 2},
+            {description = "4个", data = 4},
+            {description = "8个", data = 8},
+            {description = "10个", data = 10},
+            {description = "20个", data = 20},
         },
         default = true
     },

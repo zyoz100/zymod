@@ -8,6 +8,9 @@ if baseCombatCanAttackDeath then
     AddComponentPostInit("combat", function(self)
         -- 我是伞兵 不会hook
         function self:GetAttacked(attacker, damage, weapon, stimuli)
+            if self.inst:HasTag("player") and self.inst.components.health and self.inst.components.health:IsDead() then
+                return true
+            end
             self.lastwasattackedtime = GLOBAL.GetTime()
             --print ("ATTACKED", self.inst, attacker, damage)
             --V2C: redirectdamagefn is currently only used by either mounting or parrying,
@@ -409,5 +412,15 @@ if baseReduceAnnounce > 0 then
         else
             _G.announceList = announceList
         end
+        SendModRPCToShard(SHARD_MOD_RPC["zy"]["announce"],text,time)
     end
+
+    AddShardModRPCHandler( "zy", "announce", function(value,time)
+        if value and type(value) == "string" then
+            table.insert(_G.announceList, {
+                time = time,
+                text = value,
+            })
+        end
+    end)
 end

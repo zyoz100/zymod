@@ -76,6 +76,11 @@ if _G.isModEnableById("1392778117") then
     modimport("override/legion")
 end
 
+--yuanzi
+if _G.isModEnableById("1645013096") then
+    modimport("override/yuanzi")
+end
+
 --错误追踪
 bugtracker_config = {
     email = "zyoz300@163.com",
