@@ -405,30 +405,43 @@ end
 
 if achievementShowInfo then
     local OldNetworking_Say = GLOBAL.Networking_Say
+    local talkerMsg = function(player)
+        local msg = "";
+        local cycles = GLOBAL.TheWorld.state.cycles or 1;
+        local age = (player.components.age:GetAgeInDays() or 0) + 1;
+        if achievementMaxBuy and player.components.seplayerstatus then
+            if achievementMaxBuyMode == 0 then
+                msg = msg .. string.format("当日消费信息：%d/%d",player.components.seplayerstatus.dayBuyCoin or 0,math.ceil((1 + cycles * achievementMaxBuyRate) * achievementMaxBuy * 1000))
+            else
+                msg = msg .. string.format("消费信息：%d/%d",player.components.seplayerstatus.totalBuyCoin or 0,math.ceil((age + age * age * achievementMaxBuyRate / 2) * achievementMaxBuy * 1000))
+            end
+        end
+
+        if msg == "" then
+            msg = "没啥可以显示的！"
+        end
+        player.components.talker:Say(msg,5)
+    end
     GLOBAL.Networking_Say = function(guid, userid, name, prefab, message, colour, whisper, isemote)
         local r = OldNetworking_Say(guid, userid, name, prefab, message, colour, whisper, isemote);
         local player = GLOBAL.Ents[guid]
         if string.sub(message, 1, 1) == "#" then
             local code = string.sub(message, 2)
             if code == "info" then
-                local msg = "";
-                local cycles = GLOBAL.TheWorld.state.cycles or 1;
-                local age = (player.components.age:GetAgeInDays() or 0) + 1;
-                if achievementMaxBuy and player.components.seplayerstatus then
-                    if achievementMaxBuyMode == 0 then
-                        msg = msg .. string.format("当日消费信息：%d/%d",player.components.seplayerstatus.dayBuyCoin or 0,math.ceil((1 + cycles * achievementMaxBuyRate) * achievementMaxBuy * 1000))
-                    else
-                        msg = msg .. string.format("消费信息：%d/%d",player.components.seplayerstatus.totalBuyCoin or 0,math.ceil((age + age * age * achievementMaxBuyRate / 2) * achievementMaxBuy * 1000))
-                    end
-                end
-
-                if msg == "" then
-                    msg = "没啥可以显示的！"
-                end
-                player.components.talker:Say(msg,5)
+                talkerMsg(player);
             end
         end
         return r;
     end
+    local function onuse (inst)
+        if inst.components.inventoryitem and inst.components.inventoryitem.owner then
+            talkerMsg(inst.components.inventoryitem.owner);
+        end
+        return false
+    end
+    AddPrefabPostInit("vipcard",function(inst)
+        inst:AddComponent("useableitem")
+        inst.components.useableitem:SetOnUseFn(onuse)
+    end)
 end
 

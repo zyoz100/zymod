@@ -325,7 +325,7 @@ if randomSizeLimit then
         "koalefant_summer", --考拉象
         "koalefant_winter", --考拉象
         "lightninggoat", --伏特羊
-        "spat", --钢羊
+        --"spat", --钢羊
         "perd", --火鸡
         "eyeplant", --眼球草
         "nightmarebeak", --梦魇尖喙
@@ -350,8 +350,8 @@ if randomSizeLimit then
         "beeguard", --嗡嗡蜜蜂
         "tentacle_pillar", --大触手
         "claywarg", --黏土座狼
-        "warg", --座狼
-        "spiderqueen", --蜘蛛女王
+        --"warg", --座狼
+        --"spiderqueen", --蜘蛛女王
         "vampirebat", --
         "uncompromising_rat", --
         "swilson", --
@@ -413,7 +413,7 @@ if randomSizeLimit then
         "koalefant_summer", --考拉象
         "koalefant_winter", --考拉象
         "lightninggoat", --伏特羊
-        "spat", --钢羊
+        --"spat", --钢羊
         "perd", --火鸡
         "krampus", --坎普斯
         "monkey", --穴居猴
@@ -431,8 +431,8 @@ if randomSizeLimit then
         "molebat", --裸鼹鼠蝙蝠
         "beeguard", --嗡嗡蜜蜂
         "claywarg", --黏土座狼
-        "warg", --座狼
-        "spiderqueen", --蜘蛛女王
+        --"warg", --座狼
+        --"spiderqueen", --蜘蛛女王
         "bishop_nightmare", --损坏的发条主教
         "rook_nightmare", --损坏的发条战车
         "catcoon", --浣猫

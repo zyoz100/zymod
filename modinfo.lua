@@ -221,7 +221,8 @@ configuration_options ={
     },
     {
         name = "achievementShowInfo",
-        label = "右键打折券显示一些信息",
+        label = "显示一些信息",
+        hover = "输入#info，也可以右键打折卡",
         options = {
             {description = "显示", data = true},
             {description = "不显示", data = false},
@@ -520,6 +521,36 @@ configuration_options ={
         default = 10
     },
     {
+        name = "carneyIaido",
+        label = "闪避居合！",
+        hover = "闪避可以提高猫的攻击倍率",
+        options = {
+            {description = "2%一次", data = 0.02},
+            {description = "5%一次", data = 0.05},
+            {description = "8%一次", data = 0.08},
+            {description = "10%一次", data = 0.10},
+            {description = "20%一次", data = 0.20},
+            {description = "50%一次", data = 0.50},
+            {description = "100%一次", data = 1.00},
+        },
+        default = 10
+    },
+    {
+        name = "carneyIaidoRemove",
+        label = "闪避居合失败减少层数",
+        hover = "被攻击就会减少居合的收益",
+        options = {
+            {description = "归0！", data = 0},
+            {description = "1层", data = 1},
+            {description = "2层", data = 2},
+            {description = "5层", data = 5},
+            {description = "10层", data = 10},
+            {description = "20层", data = 20},
+            {description = "50层", data = 50},
+        },
+        default = 0
+    },
+    {
         name = "taizhen",
         label = "太真",
         options = {{description = "", data = ""}},
@@ -651,6 +682,118 @@ configuration_options ={
             {description = "10个", data = 10},
             {description = "20个", data = 20},
         },
-        default = true
+        default = 10
+    },
+    {
+        name = "yuanziMaxLevel",
+        label = "园子等级上限",
+        hover = "这个值同时也是每级需求的经验，比如50上限 每级就需要50经验",
+        options = {
+            {description = "原版", data = 0},
+            {description = "40级", data = 40},
+            {description = "50级", data = 50},
+            {description = "80级", data = 80},
+            {description = "100级", data = 100},
+            {description = "120级", data = 120},
+            {description = "150级", data = 150},
+            {description = "200级", data = 200},
+            {description = "300级", data = 300},
+        },
+        default = 100
+    },
+    {
+        name = "yuanziMoreUse",
+        label = "提高装备耐久",
+        options = {
+            {description = "原版", data = 0},
+            {description = "2倍", data = 2},
+            {description = "4倍", data = 4},
+            {description = "8倍", data = 8},
+            {description = "10倍", data = 10},
+            {description = "20倍", data = 20},
+            {description = "50倍", data = 50},
+        },
+        default = 10
+    },
+    {
+        name = "yuanziRepairMore",
+        label = "花刃可以按比例修复对应武器",
+        options = {
+            {description = "原版", data = 0},
+            {description = "10%", data = 0.1},
+            {description = "20%", data = 0.2},
+            {description = "30%", data = 0.3},
+            {description = "40%", data = 0.4},
+            {description = "50%", data = 0.5},
+            {description = "80%", data = 0.8},
+            {description = "100%", data = 1},
+        },
+        default = 0.5
+    },
+    {
+        name = "yuanziOverlordMoreDamage",
+        label = "满开伤害加强",
+        hover = "满开同时附带一定伤害，与人物当前san值相关，同时继承10%额外攻击倍率",
+        options = {
+            {description = "没有", data = 0},
+            {description = "10%", data = 0.1},
+            {description = "20%", data = 0.2},
+            {description = "30%", data = 0.3},
+            {description = "40%", data = 0.4},
+            {description = "50%", data = 0.5},
+            {description = "80%", data = 0.8},
+            {description = "100%", data = 1},
+        },
+        default = 0.5
+    },
+    {
+        name = "yuanziPickMore",
+        label = "多倍采集",
+        hover = "多倍采集根据等级有关",
+        options = {
+            {description = "没有", data = 0},
+            {description = "20级多一个", data = 1/20},
+            {description = "10级多一个", data = 1/10},
+            {description = "8级多一个", data = 1/8},
+            {description = "5级多一个", data = 1/5},
+            {description = "4级多一个", data = 1/4},
+        },
+        default = 1/10
+    },
+    {
+        name = "doghead",
+        label = "狗头（doghead）",
+        options = {{description = "", data = ""}},
+        default = ""
+    },
+    {
+        name = "dogheadSkillDamageImprove",
+        label = "技能附带人物部分攻击倍率",
+        options = {
+            {description = "不附带", data = 0},
+            {description = "10%", data = 0.1},
+            {description = "20%", data = 0.2},
+            {description = "40%", data = 0.4},
+            {description = "50%", data = 0.5},
+            {description = "80%", data = 0.8},
+            {description = "100%", data = 1},
+            {description = "130%", data = 1.3},
+            {description = "150%", data = 1.5},
+            {description = "200%", data = 2},
+        },
+        default = 1
+    },
+    {
+        name = "dogheadSkillGetMoreSoul",
+        label = "获得更多灵魂",
+        hover = "根据杀死怪物血量的开方获得更多灵魂，系数越大获得越少",
+        options = {
+            {description = "不改变", data = 0},
+            {description = "系数10", data = 10},
+            {description = "系数20", data = 20},
+            {description = "系数30", data = 30},
+            {description = "系数40", data = 40},
+        },
+        default = 20
     },
 }

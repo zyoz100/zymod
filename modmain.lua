@@ -31,10 +31,10 @@ if _G.isModEnableById("2245132201") then
     modimport("override/chogath")
 end
 
---[[--狗头
+--狗头
 if _G.isModEnableById("2002991372") then
     modimport("override/dogHead")
-end]]
+end
 
 --小穹
 if _G.isModEnableById("1638724235") then
