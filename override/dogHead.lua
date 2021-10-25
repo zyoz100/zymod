@@ -3,7 +3,7 @@ local dogheadSkillDamageImprove = GetModConfigData("dogheadSkillDamageImprove") 
 local dogheadSkillGetMoreSoul = GetModConfigData("dogheadSkillGetMoreSoul") or 0;
 if dogheadSkillDamageImprove > 0 or dogheadSkillGetMoreSoul > 0 then
     AddPrefabPostInit("doghead", function(player)
-        local fn = up.GetEventHandle(player, "onhitother", "doghead.lua")
+        local fn = up.GetEventHandle(player, "onhitother", "doghead")
         if fn then
             player:RemoveEventCallback("onhitother", fn)
         end
@@ -37,13 +37,14 @@ if dogheadSkillDamageImprove > 0 or dogheadSkillGetMoreSoul > 0 then
                 return
             end
             inst.attackTime = false
-            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) == nil or inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS).prefab ~= "soul_harvester" then
+            local weapon = inst.components.combat:GetWeapon()
+            if not weapon  or weapon.prefab ~= "soul_harvester" then
                 inst.attackTime = true
                 return
             end
             if inst.cooling == 3 then
                 inst.SoundEmitter:PlaySound("hit/hit/hit")
-                local sword_thud = SpawnPrefab("groundpound_fx")
+                local sword_thud = _G.SpawnPrefab("groundpound_fx")
                 sword_thud.entity:SetParent(data.target.entity)
                 sword_thud.Transform:SetPosition(0, 0, 0)
                 sword_thud.Transform:SetScale(0.7, 0.7, 0.7)
@@ -66,8 +67,9 @@ if dogheadSkillDamageImprove > 0 or dogheadSkillGetMoreSoul > 0 then
                     inst.cooling = 1
                     --inst.SoundEmitter:PlaySound("doghead/doghead/hit2")
                     inst.AnimState:OverrideSymbol("swap_object", "swap_soul_harvester", "swap_soul_harvester")
-                    inst:DoTaskInTime(--[[Duration]] Q_coolingtime, function()
-                        if inst.big == false and inst.cooling == 1 and (inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) ~= nil and inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS).prefab == "soul_harvester") then
+                    inst:DoTaskInTime(--[[Duration]] _G.Q_coolingtime, function()
+                        local weapon = inst.components.combat:GetWeapon()
+                        if inst.big == false and inst.cooling == 1 and (weapon ~= nil and weapon.prefab == "soul_harvester") then
                             inst.cooling = 2
                             inst.AnimState:OverrideSymbol("swap_object", "swap_soul_harvesterR", "swap_soul_harvesterR")
                         end

@@ -4,7 +4,6 @@ local soraHealDeath = GetModConfigData("soraHealDeath") or false;
 local soraRepairerToPhilosopherStoneLimit = GetModConfigData("soraRepairerToPhilosopherStoneLimit") or 0;
 local soraFastMaker = GetModConfigData("soraFastMaker") or false;
 local soraDoubleMaker = GetModConfigData("soraDoubleMaker") or -1;
-local soraRemoveExpLimit = GetModConfigData("soraRemoveExpLimit") or -1;
 local soraPackLimit = GetModConfigData("soraPackLimit") or false;
 local soraPackFL = GetModConfigData("soraPackFL") or false;
 if soraRemoveDeathExpByLevel > 0 then
@@ -150,37 +149,6 @@ if soraDoubleMaker > 0 then
     end)
 end
 
-if soraRemoveExpLimit > 0 then
-    --当前穹上限为120
-    local originalExpMax = 120;
-    --根据选项给出一个等价的初始判断值
-    local getInitExp = function(isOut)
-        return originalExpMax - (isOut and soraRemoveExpLimit * 0.5 or soraRemoveExpLimit);
-    end
-
-    local limit = {
-        kill=50,
-        attack=50,
-        emote=20,
-    }
-    AddPrefabPostInit("sora", function(inst)
-        inst.FixExpVersion = 1
-        inst:WatchWorldState("startday", function()
-            local t = GLOBAL.TheWorld.state.cycles
-            local olddayexp = inst.soradayexp or {}-- getexppatch
-            inst.soradayexp = {}
-            for k, v in pairs(olddayexp) do
-                local maxexp = limit[k] or soraRemoveExpLimit
-                if k and v and v >= (maxexp) then
-                    inst.soradayexp[k] = getInitExp(true)
-                else
-                    inst.soradayexp[k] = getInitExp(false)
-                end
-            end
-            inst.soraday = t
-        end)
-    end)
-end
 
 if soraPackLimit then
     local packPostInit = function(inst)

@@ -355,7 +355,9 @@ if baseDropDisappear > 0 then
             CancelDisappear(loot)
         end)
         loot._disappear = loot:DoTaskInTime(baseDropDisappear, function()
-            loot:Remove()
+            if loot.components.inventoryitem and not  loot.components.inventoryitem:GetContainer() then
+                loot:Remove()
+            end
         end)
         loot._disappear_anim = loot:DoTaskInTime(baseDropDisappear - 40, function()
             for j = 1, 30, 2 do
@@ -404,19 +406,21 @@ if baseReduceAnnounce > 0 then
         end
         if valid then
             _G.announceList = announceList
-            table.insert(announceList, {
+            table.insert(_G.announceList, {
                 time = _G.GetTime(),
                 text = text,
             })
+            SendModRPCToShard(SHARD_MOD_RPC["zy"]["announce"],text,_G.GetTime())
             return oldAnnounce(Net, text, ...)
         else
             _G.announceList = announceList
         end
-        SendModRPCToShard(SHARD_MOD_RPC["zy"]["announce"],text,time)
+
     end
 
     AddShardModRPCHandler( "zy", "announce", function(value,time)
         if value and type(value) == "string" then
+            _G.announceList = _G.announceList or {};
             table.insert(_G.announceList, {
                 time = time,
                 text = value,

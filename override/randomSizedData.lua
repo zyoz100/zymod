@@ -59,7 +59,7 @@ if randomSizeEnhance > 0 then
     for k,v in pairs(List) do
         AddPrefabPostInit(v, Strong)
     end
-    _G.TUNING.ANTLION_HEALTH = _G.TUNING.ANTLION_HEALTH * randomSizeEnhance
-    _G.TUNING.LEIF_HEALTH = _G.TUNING.LEIF_HEALTH * randomSizeEnhance
-    _G.TUNING.LEIF_DAMAGE = _G.TUNING.LEIF_DAMAGE * randomSizeEnhance
+    --_G.TUNING.ANTLION_HEALTH = _G.TUNING.ANTLION_HEALTH * randomSizeEnhance
+    --_G.TUNING.LEIF_HEALTH = _G.TUNING.LEIF_HEALTH * randomSizeEnhance
+    --_G.TUNING.LEIF_DAMAGE = _G.TUNING.LEIF_DAMAGE * randomSizeEnhance
 end

@@ -370,13 +370,13 @@ if achievementMaxBuy > 0 then
         local cycles = GLOBAL.TheWorld.state.cycles or 1;
         local age = (player.components.age:GetAgeInDays() or 0) + 1;
         local cost = iprice * discount * amount;
-        if achievementMaxBuyMode == 0 then
-            if iiname == "achievementsecoin" then
-                cost = cost / 10;
-                if player.components.totooriastatus ~= nil then
-                    cost = 0;
-                end
+        if iiname == "achievementsecoin" then
+            cost = cost / 10;
+            if player.components.totooriastatus ~= nil then
+                cost = 0;
             end
+        end
+        if achievementMaxBuyMode == 0 then
             local maxBuy = math.ceil((1 + cycles * achievementMaxBuyRate) * achievementMaxBuy * 1000);
             local dayOfBuy = (player.components.seplayerstatus.dayOfBuy or 0)
             if dayOfBuy ~= GLOBAL.TheWorld.state.cycles then

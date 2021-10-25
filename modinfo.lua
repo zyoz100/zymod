@@ -533,7 +533,7 @@ configuration_options ={
             {description = "50%一次", data = 0.50},
             {description = "100%一次", data = 1.00},
         },
-        default = 10
+        default = 0.1
     },
     {
         name = "carneyIaidoRemove",

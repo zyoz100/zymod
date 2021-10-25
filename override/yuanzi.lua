@@ -75,12 +75,12 @@ if yuanziRepairMore > 0 then
     for k, v in pairs(armors) do
         AddPrefabPostInit(v, function(armor)
             if armor.components.armor then
-                if weapon.components.trader then
-                    weapon.components.trader.onaccept = function(inst)
+                if armor.components.trader then
+                    armor.components.trader.onaccept = function(inst)
                         if inst.components.armor ~= nil then
                             local condition = inst.components.armor.condition
                             local maxcondition = inst.components.armor.maxcondition
-                            inst.components.armor:SetCondition(condition + maxcondition * yuanziRepairMore)
+                            inst.components.armor:SetCondition(math.min(maxcondition,condition + maxcondition * yuanziRepairMore))
                         end
                     end
                 end
@@ -140,7 +140,7 @@ if yuanziPickMore > 0 then
                     end
                 elseif data.object.components.pickable.product ~= nil and
                         not notpick[data.object.prefab] then
-                    local item = SpawnPrefab(data.object.components.pickable.product)
+                    local item = _G.SpawnPrefab(data.object.components.pickable.product)
                     if item.components.stackable then
                         item.components.stackable:SetStackSize(
                                 data.object.components.pickable.numtoharvest * num)
@@ -149,7 +149,7 @@ if yuanziPickMore > 0 then
                             data.object:GetPosition())
                     if (data.object.prefab == "cactus" or data.object.prefab ==
                             "oasis_cactus") and data.object.has_flower then
-                        local item2 = SpawnPrefab("cactus_flower")
+                        local item2 = _G.SpawnPrefab("cactus_flower")
                         if item2.components.stackable then
                             item2.components.stackable:SetStackSize(num)
                         end
@@ -162,6 +162,6 @@ if yuanziPickMore > 0 then
     end
 
     AddPrefabPostInit("yuanzi", function(player)
-        inst:ListenForEvent("picksomething", onpick)
+        player:ListenForEvent("picksomething", onpick)
     end)
 end

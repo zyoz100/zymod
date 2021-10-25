@@ -91,13 +91,16 @@ if carneyUseSetGold then
             end
             local level = 0;
             level = stacksize
-            inst.components.windyknifestatus:DoDeltaLevel(level * 10);
+            inst.components.windyknifestatus:DoDeltaLevel(level);
             inst.SoundEmitter:PlaySound("dontstarve/common/telebase_gemplace");
             valuecheck(inst);
             repair(inst, stacksize * 20)
         end
     end
-    up.Set(Prefabs.windyknife.fn, "valuecheck", valuecheck, 'windyknife.lua')
+    AddSimPostInit(function()
+        up.Set(GLOBAL.Prefabs.windyknife.fn, "valuecheck", valuecheck, 'windyknife.lua')
+    end)
+
     AddPrefabPostInit("windyknife", function(inst)
         inst.cantrader = TraderCount
         inst.components.trader:SetAcceptTest(ItemTradeTest)
@@ -110,27 +113,27 @@ if carneyIaido > 0 then
         com.Iaido = 0;
         local oldOnSave = com.OnSave
         function com:OnSave(...)
-            local data = oldOnSave(self, ...)
-            data.Iaido = self.Iaido or 0;
+            local data = oldOnSave(com, ...)
+            data.Iaido = com.Iaido or 0;
             return data;
         end
 
         local oldOnLoad = com.OnLoad
         function com:OnLoad(data, ...)
-            local result = oldOnLoad(self, data, ...)
-            self.Iaido = data.Iaido or 0;
-            self:DoDeltaIaido(0);
+            local result = oldOnLoad(com, data, ...)
+            com.Iaido = data.Iaido or 0;
+            com:DoDeltaIaido(0);
             return result;
         end
 
         function com:DoDeltaIaido(value)
-            local amount = self.Iaido + (value or 0);
+            local amount = com.Iaido + (value or 0);
             if amount < 0 then
                 amount = 0;
             end
-            self.Iaido = amount;
-            if self.inst and self.inst.components and self.inst.component.combat then
-                self.inst.components.combat.externaldamagemultipliers:SetModifier("carneyIaido", 1 + amount * carneyIaido)
+            com.Iaido = amount;
+            if com.inst and com.inst.components and com.inst.components.combat then
+                com.inst.components.combat.externaldamagemultipliers:SetModifier("carneyIaido", 1 + amount * carneyIaido)
             end
             return amount;
         end
@@ -138,12 +141,12 @@ if carneyIaido > 0 then
     AddPrefabPostInit("carney", function(inst)
         local oldAttacked = inst.components.combat.GetAttacked;
         function inst.components.combat:GetAttacked(...)
-            if self.components
-                    and self.components.carneystatus
-                    and self.components.carneystatus.miss == 1 then
-                self.components.carneystatus:DoDeltaIaido(1);
+            if inst.components
+                    and inst.components.carneystatus
+                    and inst.components.carneystatus.miss == 1 then
+                inst.components.carneystatus:DoDeltaIaido(1);
             end
-            return oldAttacked(self, ...)
+            return oldAttacked(inst, ...)
         end
 
         inst:ListenForEvent("attacked", function(player, data)
@@ -151,23 +154,23 @@ if carneyIaido > 0 then
                     and player.components.health ~= nil
                     and not player.components.health:IsDead() then
                 if carneyIaidoRemove > 0 then
-                    self.components.carneystatus:DoDeltaIaido(-carneyIaidoRemove);
+                    player.components.carneystatus:DoDeltaIaido(-carneyIaidoRemove);
                 else
-                    self.components.carneystatus:DoDeltaIaido(-self.components.carneystatus.Iaido or 0);
+                    player.components.carneystatus:DoDeltaIaido(-player.components.carneystatus.Iaido or 0);
                 end
             end
         end)
 
         local namespace = "workshop-949808360"
-        if Global.MOD_RPC_HANDLERS[namespace]
-                and Global.MOD_RPC[namespace]
-                and Global.MOD_RPC[namespace]["Check"]
-                and Global.MOD_RPC[namespace]["Check"].id
-                and Global.MOD_RPC_HANDLERS[namespace][Global.MOD_RPC[namespace]["Check"].id] then
-            Global.MOD_RPC_HANDLERS[namespace][Global.MOD_RPC[namespace]["Check"].id] = function(player)
+        if GLOBAL.MOD_RPC_HANDLERS[namespace]
+                and GLOBAL.MOD_RPC[namespace]
+                and GLOBAL.MOD_RPC[namespace]["Check"]
+                and GLOBAL.MOD_RPC[namespace]["Check"].id
+                and GLOBAL.MOD_RPC_HANDLERS[namespace][GLOBAL.MOD_RPC[namespace]["Check"].id] then
+            GLOBAL.MOD_RPC_HANDLERS[namespace][GLOBAL.MOD_RPC[namespace]["Check"].id] = function(player)
                 if not player:HasTag("playerghost") and player.components.carneystatus then
                     local msg = string.format(
-                            "等级：%d 经验：(%d/%d)\n 闪避加成：%d%",
+                            "等级：%d 经验：(%d/%d)\n闪避加成：%d%%",
                             player.components.carneystatus.level or 0,
                             math.floor(player.components.carneystatus.exp or 0),
                             player.components.carneystatus.maxexp,

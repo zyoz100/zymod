@@ -12,7 +12,7 @@ modimport("override/base")
 modimport("override/bugFix")
 
 --神话 myth
-if _G.isModEnableByName("Myth Words") then
+if _G.isModEnableById("1991746508") then
     modimport("override/myth")
 end
 

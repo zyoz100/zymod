@@ -123,9 +123,22 @@ end
 if taizhenMaxPill > 0 then
     AddComponentPostInit("tz_bighealth",
             function(self)
-                local oldOnrate = self._rate
-                self._rate = function(self,rate)
-                    oldOnrate(self,math.min(taizhenMaxPill,rate));
+                local oldAddBuff = self.AddBuff
+                function self:AddBuff()
+                    if self.rate <  taizhenMaxPill then
+                        oldAddBuff(self)
+                    else
+                        if self.task ~= nil then
+                            self.task:Cancel()
+                        end
+                        self.task = self.inst:DoTaskInTime(self.time, function()
+                            self:RemoveBuff()
+                        end, self)
+                        if self.inst.apingbighealthtime ~= nil then
+                            self.inst.apingbighealthtime:set_local(0)
+                            self.inst.apingbighealthtime:set(self.time)
+                        end
+                    end
                 end
             end
     )

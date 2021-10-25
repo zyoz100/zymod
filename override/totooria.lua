@@ -224,17 +224,7 @@ end
 --武器攻击范围随装备角色的脑残上限变化
 
 local rangechange;
-if totooriaStaffRandomDamage then
-    rangechange = function(inst)
-        if inst.components.inventoryitem.owner ~= nil then
-            if inst.components.inventoryitem.owner.components.sanity then
-                local ownersanity = inst.components.inventoryitem.owner.components.sanity.max
-                local rangemodifer = math.min(((ownersanity / 200) ^ 4 + 1) / 1.5, 20)
-                inst.components.weapon:SetRange(rangemodifer, rangemodifer + 2)
-            end
-        end
-    end
-else
+if totooriaStaffRandomDamage > 0 then
     rangechange = function(inst)
         if inst.components.inventoryitem.owner ~= nil then
             local owner = inst.components.inventoryitem.owner; --武器持有者
@@ -268,8 +258,8 @@ else
                 end
             end
             if owner.components.hunger then
-                local ownerHungerMax = owner.components.health.max or 0;
-                local ownerHungerCurrent = owner.components.health.current or 0;
+                local ownerHungerMax = owner.components.hunger.max or 0;
+                local ownerHungerCurrent = owner.components.hunger.current or 0;
                 hungerNumber = ownerHungerMax - ownerHungerCurrent;
                 if ownerHungerMax > 0 then
                     hungerRate = hungerNumber / ownerHungerMax;
@@ -285,13 +275,24 @@ else
             }
             local rate = proportion.san * sanityRate + proportion.health * healthRate + proportion.hunger * hungerRate;
             local num = proportion.san * sanityNumber + proportion.health * healthNumber + proportion.hunger * hungerNumber;
-            inst.components.weapon:setDamage(math.ceil(totooriaStaffRandomDamage * 100 * rate ^ 5) + 17);
+            inst.components.weapon:SetDamage(math.ceil(totooriaStaffRandomDamage * 100 * rate ^ 5) + 17);
             if owner.components.combat then
                 local max = (1 + num / 1000) * 2
                 owner.components.combat.externaldamagemultipliers:SetModifier("zy_t_staff", max * math.random())
             end
         end
     end
+else
+    rangechange = function(inst)
+        if inst.components.inventoryitem.owner ~= nil then
+            if inst.components.inventoryitem.owner.components.sanity then
+                local ownersanity = inst.components.inventoryitem.owner.components.sanity.max
+                local rangemodifer = math.min(((ownersanity / 200) ^ 4 + 1) / 1.5, 20)
+                inst.components.weapon:SetRange(rangemodifer, rangemodifer + 2)
+            end
+        end
+    end
+
 end
 
 local totooriastaffPostInit = function(inst)
