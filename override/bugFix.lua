@@ -33,6 +33,57 @@ if _G.isModEnableById("2582670245") then
             end)
         end
     end)
+    local fuList = {
+        "xe_fu_yazi",
+        "xe_fu_zouwu",
+        "xe_fu_mingyue",
+        "xe_fu_yushi",
+        "xe_fu_tieyu",
+    }
+    for k, v in pairs(fuList) do
+        AddPrefabPostInit(v, function(fu)
+            fu.components.finiteuses:SetOnFinished(function(inst)
+                local player = inst.components.inventoryitem:GetGrandOwner()
+                inst:Remove()
+                if player then
+                    player:DoTaskInTime(_G.FRAMES, function(player)
+                        if player and not player:HasTag("playerghost") then
+                            local scabbard = player.components.inventory:GetEquippedItem(_G.EQUIPSLOTS.BODY)
+                            if scabbard
+                                    and scabbard:IsValid()
+                                    and scabbard.prefab == "xe_scabbard"
+                                    and scabbard.components.container
+                            then
+                                --选取相同的符
+                                local inventoryFu = player.components.inventory:FindItem(function(item)
+                                    if item.prefab == inst.prefab then
+                                        return true
+                                    end
+                                    return false
+                                end)
+                                --退而求其次
+                                if not inventoryFu then
+                                    inventoryFu = player.components.inventory:FindItem(function(item)
+                                        if item:HasTag("xe_fu") then
+                                            return true
+                                        end
+                                        return false
+                                    end)
+                                end
+                                for i = 1, scabbard.components.container:GetNumSlots() do
+                                    if scabbard.components.container:GetItemInSlot(i) == nil and inventoryFu then
+                                        scabbard.components.container:GiveItem(inventoryFu.components.inventoryitem:RemoveFromOwner(scabbard.components.container.acceptsstacks), i, nil, false)
+                                        inventoryFu = nil
+                                        break ;
+                                    end
+                                end
+                            end
+                        end
+                    end)
+                end
+            end)
+        end)
+    end
 end
 --希尔
 if _G.isModEnableById("1757943227") then

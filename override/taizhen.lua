@@ -3,7 +3,6 @@ local taizhenMaxPill = GetModConfigData("taizhenMaxPill") or 0;
 if taizhenImproveXX >0 then
     AddComponentPostInit("tz_xx",
             function(self)
-
                 local function onsetnet(self,num)
                     if self.inst.tz_xx ~= nil then
                         local dengji = self.dengji or 0
@@ -111,11 +110,10 @@ if taizhenImproveXX >0 then
                         onsetnet(self)
                     end
                 end
-
-                self._.ba = { nil, onba }
-                self._.sh = { nil, onsh }
-                self._.hd = { nil, onhd }
-                self._.kz = { nil, onkz }
+                addsetter(self,"ba",onba)
+                addsetter(self,"sh",onsh)
+                addsetter(self,"hd",onhd)
+                addsetter(self,"kz",onkz)
             end
     )
 end
