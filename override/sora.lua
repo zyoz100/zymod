@@ -25,7 +25,6 @@ if soraRemoveRollExpByLevel > 0 then
     -- 穹2换人不掉落经验
     AddComponentPostInit("soraexpsave",
             function(self)
-                __GetExp = self.GetExp;
                 function self:GetExp(userid)
                     local level = GLOBAL.exptolev(self.exps[userid] or 0);
                     local loseExp = level >= soraRemoveRollExpByLevel and 0 or 1000;

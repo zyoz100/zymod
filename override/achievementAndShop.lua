@@ -424,8 +424,8 @@ if achievementShowInfo then
     end
     GLOBAL.Networking_Say = function(guid, userid, name, prefab, message, colour, whisper, isemote)
         local r = OldNetworking_Say(guid, userid, name, prefab, message, colour, whisper, isemote);
-        local player = GLOBAL.Ents[guid]
         if string.sub(message, 1, 1) == "#" then
+            local player = GLOBAL.Ents[guid]
             local code = string.sub(message, 2)
             if code == "info" then
                 talkerMsg(player);
