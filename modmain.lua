@@ -81,13 +81,16 @@ if _G.isModEnableById("1645013096") then
     modimport("override/yuanzi")
 end
 
---错误追踪
-bugtracker_config = {
-    email = "zyoz300@163.com",
-    upload_client_log = true,
-    upload_server_log = true,
-    upload_other_mods_crash_log = true,
-}
+--yuanzi
+if _G.isModEnableById("1892210190") then
+    modimport("override/amiya")
+end
+
+--seele
+if _G.isModEnableById("1757943227") then
+    modimport("override/seele")
+end
+
 
 
 

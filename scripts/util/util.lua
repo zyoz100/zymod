@@ -60,7 +60,7 @@ end
 
 GLOBAL.ZyUtil = {
     isNumber = isNumber,
-    isString = isString
+    isString = isString,
 }
 
 

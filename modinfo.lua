@@ -796,4 +796,140 @@ configuration_options ={
         },
         default = 20
     },
+    {
+        name = "amiya",
+        label = "阿米娅",
+        options = {{description = "", data = ""}},
+        default = ""
+    },
+    {
+        name = "amyMachiningCenterAutoStack",
+        label = "制造机的物品掉落是否自动堆叠",
+        options = {
+            {description = "堆叠", data = true},
+            {description = "原版", data = false},
+        },
+        default = true
+    },
+    {
+        name = "amyHeChengDisappear",
+        label = "合成玉生成物品一段时间消失",
+        hover = "垃圾解决方案",
+        options = {
+            {description = "关闭", data = 0},
+            {description = "60s后消失", data = 60},
+            {description = "半天后消失", data = 4*60},
+            {description = "1天后消失", data = 8*60},
+            {description = "2天后消失", data = 2*8*60},
+            {description = "5天后消失", data = 5*8*60},
+        },
+        default = 4*60
+    },
+    {
+        name = "amyWeaponDamageGrowthRate",
+        label = "专属武器有成长性",
+        options = {
+            {description = "关闭", data = 0},
+            {description = "每级10%", data = 10},
+            {description = "每级20%", data = 20},
+            {description = "每级40%", data = 40},
+            {description = "每级50%", data = 50},
+            {description = "每级80%", data = 80},
+            {description = "每级100%", data = 100},
+            {description = "每级200%", data = 200},
+        },
+        default = 40
+    },
+    {
+        name = "amyWeaponMaxLevel",
+        label = "专属武器最大等级",
+        options = {
+            {description = "无上限", data = -1},
+            {description = "10级", data = 10},
+            {description = "30级", data = 30},
+            {description = "50级", data = 50},
+            {description = "100级", data = 100},
+        },
+        default = 30
+    },
+    {
+        name = "seele",
+        label = "希尔",
+        options = {{description = "", data = ""}},
+        default = ""
+    },
+    {
+        name = "seeleMaxLevel",
+        label = "最大等级",
+        options = {
+            {description = "默认", data = 0},
+            {description = "40级", data = 40},
+            {description = "50级", data = 50},
+            {description = "100级", data = 100},
+            {description = "150级", data = 150},
+            {description = "200级", data = 200},
+            {description = "500级", data = 500},
+            {description = "9999级", data = 9999},
+        },
+        default = 150
+    },
+    {
+        name = "seeleDayMaxLevel",
+        label = "每天最多升级上限",
+        options = {
+            {description = "无", data = 0},
+            {description = "5级", data = 5},
+            {description = "10级", data = 10},
+            {description = "20级", data = 20},
+            {description = "40级", data = 40},
+        },
+        default = 5
+    },
+    {
+        name = "seeleStrengthByLevel",
+        label = "等级提高调率上限",
+        options = {
+            {description = "无", data = 0},
+            {description = "2级一层", data = 2},
+            {description = "3级一层", data = 3},
+            {description = "5级一层", data = 5},
+            {description = "10级一层", data = 10},
+        },
+        default = 3
+    },
+    {
+        name = "seeleReaperMaxLevel",
+        label = "童谣上限修改",
+        options = {
+            {description = "无", data = 0},
+            {description = "50", data = 50},
+            {description = "80", data = 80},
+            {description = "100", data = 100},
+            {description = "150", data = 150},
+            {description = "200", data = 200},
+            {description = "250", data = 250},
+        },
+        default = 150
+    },
+    {
+        name = "seeleReaperCritUnlockRatio",
+        label = "童谣解锁暴击的等级比例",
+        options = {
+            {description = "不存在暴击", data = 0},
+            {description = "10%", data = 0.1},
+            {description = "20%", data = 0.2},
+            {description = "30%", data = 0.3},
+            {description = "50%", data = 0.5},
+            {description = "70%", data = 0.7},
+            {description = "90%", data = 0.9},
+        },
+        default = 0.3
+    },
+}
+--错误追踪
+bugtracker_config = {
+    email = "zyoz300@163.com",
+    upload_client_log = true,
+    upload_server_log = true,
+    upload_other_mods_crash_log = true,
 }

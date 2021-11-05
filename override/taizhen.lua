@@ -110,10 +110,10 @@ if taizhenImproveXX >0 then
                         onsetnet(self)
                     end
                 end
-                addsetter(self,"ba",onba)
-                addsetter(self,"sh",onsh)
-                addsetter(self,"hd",onhd)
-                addsetter(self,"kz",onkz)
+                GLOBAL.addsetter(self,"ba",onba)
+                GLOBAL.addsetter(self,"sh",onsh)
+                GLOBAL.addsetter(self,"hd",onhd)
+                GLOBAL.addsetter(self,"kz",onkz)
             end
     )
 end

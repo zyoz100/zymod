@@ -355,7 +355,9 @@ if baseDropDisappear > 0 then
             CancelDisappear(loot)
         end)
         loot._disappear = loot:DoTaskInTime(baseDropDisappear, function()
-            if loot.components.inventoryitem and not  loot.components.inventoryitem:GetContainer() then
+            if loot:IsValid()
+                    and loot.components.inventoryitem
+                    and not loot.components.inventoryitem:GetContainer() then
                 loot:Remove()
             end
         end)
