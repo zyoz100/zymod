@@ -92,6 +92,41 @@ configuration_options ={
         },
         default = 5
     },
+    {--
+        name = "baseReduceCombatExternalDamageMultipliersAdjust",
+        label = "额外攻击倍率计算变成加算",
+        hover = "极大削弱人物档的人物强度和药剂作用",
+        options = {
+            {description = "关闭", data = false},
+            {description = "开启", data = true},
+        },
+        default = false
+    },
+    {
+        name = "bugFix",
+        label = "一些bug修正",
+        hover = "如果有冲突或者作者更新修复请关闭对应的设置",
+        options = {{description = "", data = ""}},
+        default = ""
+    },
+    {--
+        name = "bugFixXuaner",
+        label = "璇儿",
+        options = {
+            {description = "修正", data = true},
+            {description = "不修正", data = false},
+        },
+        default = true
+    },
+    {--
+        name = "bugFixFangXiong",
+        label = "防熊max",
+        options = {
+            {description = "修正", data = true},
+            {description = "不修正", data = false},
+        },
+        default = true
+    },
     {
         name = "myth",
         label = "神话设置",
@@ -525,6 +560,7 @@ configuration_options ={
         label = "闪避居合！",
         hover = "闪避可以提高猫的攻击倍率",
         options = {
+            {description = "关闭", data = 0},
             {description = "2%一次", data = 0.02},
             {description = "5%一次", data = 0.05},
             {description = "8%一次", data = 0.08},
@@ -586,6 +622,21 @@ configuration_options ={
         default = 10
     },
     {
+        name = "taizhentfSwordExternalDamageMultipliers",
+        label = "讨伐大剑技能复原",
+        hover = "可以选择大剑继承的伤害倍率（太真继承双倍）",
+        options = {
+            {description = "不启用", data = 0},
+            {description = "10%", data = 0.1},
+            {description = "20%", data = 0.2},
+            {description = "30%", data = 0.3},
+            {description = "40%", data = 0.4},
+            {description = "50%", data = 0.5},
+            {description = "75%", data = 0.75},
+        },
+        default = 0.2
+    },
+    {
         name = "huli",
         label = "大狐狸及衍生",
         options = {{description = "", data = ""}},
@@ -619,6 +670,16 @@ configuration_options ={
             {description = "仅对武器有效", data = "weapon"},
         },
         default = "weaponAndClothing"
+    },
+    {
+        name = "lazyTechHDSelectOptimize",
+        label = "火堆检测优化",
+        hover = "现在会检查是否有怠惰火堆改装的箱子烧可燃物",
+        options = {
+            {description = "不优化", data = false},
+            {description = "优化", data = true},
+        },
+        default = true
     },
     {
         name = "randomSize",

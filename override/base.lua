@@ -4,6 +4,7 @@ local baseBossGrowth = GetModConfigData("baseBossGrowth") or 2;
 local baseRandomDamageLow = GetModConfigData("baseRandomDamageLow") or 0;
 local baseDropDisappear = GetModConfigData("baseDropDisappear") or 0;
 local baseReduceAnnounce = GetModConfigData("baseReduceAnnounce") or 0;
+local baseReduceCombatExternalDamageMultipliersAdjust = GetModConfigData("baseReduceCombatExternalDamageMultipliersAdjust") or false;
 if baseCombatCanAttackDeath then
     AddComponentPostInit("combat", function(self)
         -- 我是伞兵 不会hook
@@ -412,7 +413,7 @@ if baseReduceAnnounce > 0 then
                 time = _G.GetTime(),
                 text = text,
             })
-            SendModRPCToShard(SHARD_MOD_RPC["zy"]["announce"],text,_G.GetTime())
+            SendModRPCToShard(SHARD_MOD_RPC["zy"]["announce"], text, _G.GetTime())
             return oldAnnounce(Net, text, ...)
         else
             _G.announceList = announceList
@@ -420,7 +421,7 @@ if baseReduceAnnounce > 0 then
 
     end
 
-    AddShardModRPCHandler( "zy", "announce", function(value,time)
+    AddShardModRPCHandler("zy", "announce", function(value, time)
         if value and type(value) == "string" then
             _G.announceList = _G.announceList or {};
             table.insert(_G.announceList, {
@@ -429,4 +430,16 @@ if baseReduceAnnounce > 0 then
             })
         end
     end)
+end
+
+if baseReduceCombatExternalDamageMultipliersAdjust then
+    local SourceModifierList = require("util/sourcemodifierlist")
+    AddComponentPostInit(
+            "combat",
+            function(self, inst)
+                self.externaldamagemultipliers = SourceModifierList(self.inst, 1, function(a, b)
+                    return a + b - 1;
+                end)
+            end
+    )
 end
