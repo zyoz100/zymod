@@ -13,44 +13,42 @@ end
 if seeleDayMaxLevel > 0 then
     local OnSeeleExpFunctionName = "o5e6fP"
     local OnSeeleStateFunctionName = "bb"
-    local OnSeeleState = up.Get(GLOBAL.Prefabs.seele.fn, OnSeeleStateFunctionName, 'seele.lua')
-    local OnSeeleExp = function(player, amount)
-        if player.components.seelebase.dayLevelDay ~= _G.TheWorld.state.cycles then
-            player.components.seelebase.dayLevelDelta = 0;
-            player.components.seelebase.dayLevelDay = _G.TheWorld.state.cycles;
-        end
-        player.components.seelebase.current = player.components.seelebase.current + amount
-        local isLevelUp = false;
-        while true do
-            local levelExp = 25 * (player.components.seelebase.level + 1);
-            if player.components.seelebase.level >= player.max_level then
-                player.components.seelebase.current = 0
-                break ;
-            elseif player.components.seelebase.dayLevelDelta >= seeleDayMaxLevel then
-                player.components.seelebase.current = math.min(player.components.seelebase.current, levelExp - 1)
-                break ;
-            elseif player.components.seelebase.current > levelExp then
-                player.components.seelebase.level = player.components.seelebase.level + 1
-                player.components.seelebase.dayLevelDelta = player.components.seelebase.dayLevelDelta + 1
-                player.components.seelebase.current = player.components.seelebase.current - levelExp
-                isLevelUp = true;
-            else
-                break ;
+    AddSimPostInit(function()
+        if GLOBAL.Prefabs.seele then
+            local OnSeeleState = up.Get(GLOBAL.Prefabs.seele.fn, OnSeeleStateFunctionName, 'seele.lua')
+            local OnSeeleExp = function(player, amount)
+                if player.components.seelebase.dayLevelDay ~= _G.TheWorld.state.cycles then
+                    player.components.seelebase.dayLevelDelta = 0;
+                    player.components.seelebase.dayLevelDay = _G.TheWorld.state.cycles;
+                end
+                player.components.seelebase.current = player.components.seelebase.current + amount
+                local isLevelUp = false;
+                while true do
+                    local levelExp = 25 * (player.components.seelebase.level + 1);
+                    if player.components.seelebase.level >= player.max_level then
+                        player.components.seelebase.current = 0
+                        break ;
+                    elseif player.components.seelebase.dayLevelDelta >= seeleDayMaxLevel then
+                        player.components.seelebase.current = math.min(player.components.seelebase.current, levelExp - 1)
+                        break ;
+                    elseif player.components.seelebase.current > levelExp then
+                        player.components.seelebase.level = player.components.seelebase.level + 1
+                        player.components.seelebase.dayLevelDelta = player.components.seelebase.dayLevelDelta + 1
+                        player.components.seelebase.current = player.components.seelebase.current - levelExp
+                        isLevelUp = true;
+                    else
+                        break ;
+                    end
+                end
+                if isLevelUp then
+                    player.restrict = true
+                    OnSeeleState(player)
+                    player.components.talker:Say(_G.STRINGS.SEELE_LEVELUP)
+                end
             end
+            up.Set(GLOBAL.Prefabs.seele.fn, OnSeeleExpFunctionName, OnSeeleExp, 'seele.lua')
         end
-        if isLevelUp then
-            player.restrict = true
-            OnSeeleState(player)
-            player.components.talker:Say(_G.STRINGS.SEELE_LEVELUP)
-        end
-    end
-    if GLOBAL.Prefabs.seele.fn then
-        AddSimPostInit(function()
-            if GLOBAL.Prefabs.seele then
-                up.Set(GLOBAL.Prefabs.seele.fn, OnSeeleExpFunctionName, OnSeeleExp, 'seele.lua')
-            end
-        end)
-    end
+    end)
     AddComponentPostInit("seelebase", function(com)
         com.dayLevelDelta = 0
         com.dayLevelDay = 0
@@ -91,20 +89,17 @@ end
 
 if seeleReaperMaxLevel > 0 then
     local onGluttonyChangeName = "G5BuU5";
-    if GLOBAL.Prefabs.seele_reaper.fn then
-        AddSimPostInit(function()
-            if GLOBAL.Prefabs.seele_reaper then
-                local onGluttonyChange = up.Get(GLOBAL.Prefabs.seele_reaper.fn, onGluttonyChangeName, 'abysmal_category.lua')
-                up.Set(GLOBAL.Prefabs.seele_reaper.fn, onGluttonyChangeName, function(weapon, amount, use)
-                    if amount ~= nil then
-                        weapon.components.seelereaper.gluttony = math.min(math.max(weapon.components.seelereaper.gluttony + amount, 0), seeleReaperMaxLevel)
-                    end
-                    onGluttonyChange(weapon, nil, use);
-                end, 'abysmal_category.lua')
-            end
-        end)
-    end
-
+    AddSimPostInit(function()
+        if GLOBAL.Prefabs.seele_reaper then
+            local onGluttonyChange = up.Get(GLOBAL.Prefabs.seele_reaper.fn, onGluttonyChangeName, 'abysmal_category.lua')
+            up.Set(GLOBAL.Prefabs.seele_reaper.fn, onGluttonyChangeName, function(weapon, amount, use)
+                if amount ~= nil then
+                    weapon.components.seelereaper.gluttony = math.min(math.max(weapon.components.seelereaper.gluttony + amount, 0), seeleReaperMaxLevel)
+                end
+                onGluttonyChange(weapon, nil, use);
+            end, 'abysmal_category.lua')
+        end
+    end)
 end
 
 if seeleReaperCritUnlockRatio > 0 then

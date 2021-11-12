@@ -1,7 +1,7 @@
 name = "zy'mod"
 description = "服务器自用"
 author = "zy"
-version = "0.36"
+version = "0.46"
 
 forumthread = ""
 
@@ -265,6 +265,19 @@ configuration_options ={
         default = true
     },
     {
+        name = "achievementBuyCD",
+        label = "物品购买cd",
+        hover = "输入#info，也可以右键打折卡",
+        options = {
+            {description = "关闭", data = 0},
+            {description = "0.2秒", data = 0.2},
+            {description = "0.5秒", data = 0.5},
+            {description = "0.8秒", data = 0.8},
+            {description = "1秒", data = 1},
+        },
+        default = 0.2
+    },
+    {
         name = "totooria",
         label = "托托莉",
         options = {{description = "", data = ""}},
@@ -483,18 +496,6 @@ configuration_options ={
         default = 30
     },
     {
-        name = "soraRemoveExpLimit",
-        label = "穹黑名单互助会",
-        hover = "不懂别开，小心上黑名单",
-        options = {
-            {description = "不改变", data = -1},
-            {description = "75上限", data = 75},
-            {description = "100上限", data = 100},
-            {description = "120上限", data = 120},
-        },
-        default = -1
-    },
-    {
         name = "soraPackLimit",
         label = "限制打包",
         hover = "禁止穹打包一些独有的东西，比如猪王等。",
@@ -622,19 +623,24 @@ configuration_options ={
         default = 10
     },
     {
-        name = "taizhentfSwordExternalDamageMultipliers",
-        label = "讨伐大剑技能复原",
-        hover = "可以选择大剑继承的伤害倍率（太真继承双倍）",
+        name = "taizhenTfSwordSkillRate",
+        label = "讨伐还原",
+        hover = "还原讨伐技能并可附上攻击倍率（太真两倍）",
         options = {
-            {description = "不启用", data = 0},
+            {description = "没有", data = -1},
+            {description = "原版", data = 0},
             {description = "10%", data = 0.1},
             {description = "20%", data = 0.2},
             {description = "30%", data = 0.3},
             {description = "40%", data = 0.4},
             {description = "50%", data = 0.5},
-            {description = "75%", data = 0.75},
+            {description = "60%", data = 0.6},
+            {description = "70%", data = 0.7},
+            {description = "80%", data = 0.8},
+            {description = "90%", data = 0.9},
+            {description = "100%", data = 1},
         },
-        default = 0.2
+        default = 0.5
     },
     {
         name = "huli",

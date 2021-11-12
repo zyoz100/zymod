@@ -60,27 +60,29 @@ end
 function zyWeapon:DoDeltaExp(value)
     local level = self:GetLevel()
     local max_level = self:GetMaxLevel()
-    if max_level < 0 and level >= max_level then
+    if max_level > 0 and level >= max_level then
         self:SetLevel(max_level)
         self:SetExp(0);
     else
         local exp = self:GetExp() + value;
         while true do
-            if exp > self:GetLevelExp(level) then
+            if exp >= self:GetLevelExp(level) then
                 if level < max_level then
-                    level = level + 1;
                     exp = exp - self:GetLevelExp(level)
+                    level = level + 1;
                 else
                     level = max_level;
                     exp = 0;
+                    break;
                 end
             elseif exp < 0 then
                 if level > 0 then
-                    level = level - 1;
                     exp = exp + self:GetLevelExp(level)
+                    level = level - 1;
                 else
                     level = 0;
                     exp = 0;
+                    break;
                 end
             else
                 break ;
@@ -94,6 +96,22 @@ end
 
 function zyWeapon:update()
 
+end
+
+function zyWeapon:OnSave()
+    return {
+        exp = self.exp,
+        level = self.level,
+        max_level = self.max_level,
+    }
+end
+function zyWeapon:OnLoad(data)
+    if data then
+        self.exp = data.exp or 0
+        self.level = data.level or 0
+        self.max_level = data.max_level or -1
+        self:update();
+    end
 end
 
 return zyWeapon

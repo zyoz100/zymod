@@ -6,6 +6,7 @@ local achievementMaxBuy = GetModConfigData("achievementMaxBuy") or 0;
 local achievementMaxBuyMode = GetModConfigData("achievementMaxBuyMode") or 0
 local achievementMaxBuyRate = GetModConfigData("achievementMaxBuyRate")
 local achievementShowInfo = GetModConfigData("achievementShowInfo") or false
+local achievementBuyCD = GetModConfigData("achievementBuyCD") or false
 if type(achievementMaxBuyRate) ~= "number" then
     achievementMaxBuyRate = 0.01
 end
@@ -310,7 +311,7 @@ if achievementGetMorePoints > 0 then
     )
 end
 
-if achievementMaxBuy > 0 then
+if achievementMaxBuy > 0 or achievementBuyCD >0 then
     local namespace = "SimpleEconomy";
     local buyHandle = GLOBAL.MOD_RPC_HANDLERS[namespace][GLOBAL.MOD_RPC[namespace]["buy_fix"].id];
     AddComponentPostInit("seplayerstatus", function(self)
@@ -331,96 +332,119 @@ if achievementMaxBuy > 0 then
         end
     end)
     GLOBAL.MOD_RPC_HANDLERS[namespace][GLOBAL.MOD_RPC[namespace]["buy_fix"].id] = function(player, i, title, more)
-        local list = {};
-        local ii = 1;
-        if title == "food" then
-            list = GLOBAL.TUNING.selist_food
-            ii = i
+        if achievementBuyCD>0  then
+            local lastBuyTime = player.components.seplayerstatus.lastBuyTime or 0;
+            if GLOBAL.GetTime() - lastBuyTime< achievementBuyCD then
+                player.components.talker:Say("购买冷却"..achievementBuyCD.."秒")
+                return;
+            end
         end
-        if title == "cloth" then
-            list = GLOBAL.TUNING.selist_cloth
-            ii = i
-        end
-        if title == "smithing" then
-            list = GLOBAL.TUNING.selist_smithing
-            ii = i
-        end
-        if title == "resource" then
-            list = GLOBAL.TUNING.selist_resource
-            ii = i
-        end
-        --if title == "precious" then list = TUNING.selist_precious end
-        if title == "precious" then
-            local secp = player.components.seplayerstatus.precious
-            list = GLOBAL.selist_precious
-            ii = secp[i]
-        end
-        if title == "special" then
-            list = GLOBAL.TUNING.selist_special
-            ii = i
+        if achievementMaxBuy > 0 then
+            local list = {};
+            local ii = 1;
+            if title == "food" then
+                list = GLOBAL.TUNING.selist_food
+                ii = i
+            end
+            if title == "cloth" then
+                list = GLOBAL.TUNING.selist_cloth
+                ii = i
+            end
+            if title == "smithing" then
+                list = GLOBAL.TUNING.selist_smithing
+                ii = i
+            end
+            if title == "resource" then
+                list = GLOBAL.TUNING.selist_resource
+                ii = i
+            end
+            --if title == "precious" then list = TUNING.selist_precious end
+            if title == "precious" then
+                local secp = player.components.seplayerstatus.precious
+                list = GLOBAL.selist_precious
+                ii = secp[i]
+            end
+            if title == "special" then
+                list = GLOBAL.TUNING.selist_special
+                ii = i
+            end
+
+            local iiname = list[ii].name
+            local iprice = list[ii].price
+            local amount = 1
+            if more then
+                amount = 10
+            end
+            local discount = player.components.seplayerstatus.discount;
+            local cycles = GLOBAL.TheWorld.state.cycles or 1;
+            local age = (player.components.age:GetAgeInDays() or 0) + 1;
+            local cost = iprice * discount * amount;
+            if iiname == "achievementsecoin" then
+                cost = cost / 10;
+                if player.components.totooriastatus ~= nil then
+                    cost = 0;
+                end
+            end
+            if achievementMaxBuyMode == 0 then
+                local maxBuy = math.ceil((1 + cycles * achievementMaxBuyRate) * achievementMaxBuy * 1000);
+                local dayOfBuy = (player.components.seplayerstatus.dayOfBuy or 0)
+                if dayOfBuy ~= GLOBAL.TheWorld.state.cycles then
+                    player.components.seplayerstatus.dayBuyCoin = 0;
+                    player.components.seplayerstatus.dayOfBuy = GLOBAL.TheWorld.state.cycles
+                end
+                local dayBuyCoin = (player.components.seplayerstatus.dayBuyCoin or 0)
+                if dayOfBuy == GLOBAL.TheWorld.state.cycles and dayBuyCoin > maxBuy then
+                    player.components.talker:Say("您今天已经消费到上限（" .. dayBuyCoin .. "/" .. maxBuy .. "）")
+                else
+                    player.components.seplayerstatus.dayBuyCoin = dayBuyCoin + cost;
+                    if achievementBuyCD>0 then
+                        player.components.seplayerstatus.lastBuyTime = GLOBAL.GetTime();
+                    end
+                    buyHandle(player, i, title, more);
+                end
+            elseif achievementMaxBuyMode == 1 then
+                local maxBuy = math.ceil((age + age * age * achievementMaxBuyRate / 2) * achievementMaxBuy * 1000); --偷懒算法
+                local totalBuyCoin = (player.components.seplayerstatus.totalBuyCoin or 0)
+                if totalBuyCoin > maxBuy then
+                    player.components.talker:Say("您已经消费到上限（" .. totalBuyCoin .. "/" .. maxBuy .. "）")
+                else
+                    player.components.seplayerstatus.totalBuyCoin = totalBuyCoin + cost;
+                    if achievementBuyCD>0 then
+                        player.components.seplayerstatus.lastBuyTime = GLOBAL.GetTime();
+                    end
+                    buyHandle(player, i, title, more);
+                end
+            end
+        else
+            if achievementBuyCD>0 then
+                player.components.seplayerstatus.lastBuyTime = GLOBAL.GetTime();
+            end
+            buyHandle(player, i, title, more);
         end
 
-        local iiname = list[ii].name
-        local iprice = list[ii].price
-        local amount = 1
-        if more then
-            amount = 10
-        end
-        local discount = player.components.seplayerstatus.discount;
-        local cycles = GLOBAL.TheWorld.state.cycles or 1;
-        local age = (player.components.age:GetAgeInDays() or 0) + 1;
-        local cost = iprice * discount * amount;
-        if iiname == "achievementsecoin" then
-            cost = cost / 10;
-            if player.components.totooriastatus ~= nil then
-                cost = 0;
-            end
-        end
-        if achievementMaxBuyMode == 0 then
-            local maxBuy = math.ceil((1 + cycles * achievementMaxBuyRate) * achievementMaxBuy * 1000);
-            local dayOfBuy = (player.components.seplayerstatus.dayOfBuy or 0)
-            if dayOfBuy ~= GLOBAL.TheWorld.state.cycles then
-                player.components.seplayerstatus.dayBuyCoin = 0;
-                player.components.seplayerstatus.dayOfBuy = GLOBAL.TheWorld.state.cycles
-            end
-            local dayBuyCoin = (player.components.seplayerstatus.dayBuyCoin or 0)
-            if dayOfBuy == GLOBAL.TheWorld.state.cycles and dayBuyCoin > maxBuy then
-                player.components.talker:Say("您今天已经消费到上限（" .. dayBuyCoin .. "/" .. maxBuy .. "）")
-            else
-                player.components.seplayerstatus.dayBuyCoin = dayBuyCoin + cost;
-                buyHandle(player, i, title, more);
-            end
-        elseif achievementMaxBuyMode == 1 then
-            local maxBuy = math.ceil((age + age * age * achievementMaxBuyRate / 2) * achievementMaxBuy * 1000); --偷懒算法
-            local totalBuyCoin = (player.components.seplayerstatus.totalBuyCoin or 0)
-            if totalBuyCoin > maxBuy then
-                player.components.talker:Say("您已经消费到上限（" .. totalBuyCoin .. "/" .. maxBuy .. "）")
-            else
-                player.components.seplayerstatus.totalBuyCoin = totalBuyCoin + cost;
-                buyHandle(player, i, title, more);
-            end
-        end
     end
 end
 
 if achievementShowInfo then
     local OldNetworking_Say = GLOBAL.Networking_Say
     local talkerMsg = function(player)
-        local msg = "";
-        local cycles = GLOBAL.TheWorld.state.cycles or 1;
-        local age = (player.components.age:GetAgeInDays() or 0) + 1;
-        if achievementMaxBuy and player.components.seplayerstatus then
-            if achievementMaxBuyMode == 0 then
-                msg = msg .. string.format("当日消费信息：%d/%d",player.components.seplayerstatus.dayBuyCoin or 0,math.ceil((1 + cycles * achievementMaxBuyRate) * achievementMaxBuy * 1000))
-            else
-                msg = msg .. string.format("消费信息：%d/%d",player.components.seplayerstatus.totalBuyCoin or 0,math.ceil((age + age * age * achievementMaxBuyRate / 2) * achievementMaxBuy * 1000))
+        if player and player.components and player.components.talker then
+            local msg = "";
+            local cycles = GLOBAL.TheWorld.state.cycles or 1;
+            if achievementMaxBuy and player.components.seplayerstatus then
+                if achievementMaxBuyMode == 0 then
+                    msg = msg .. string.format("当日消费信息：%d/%d",player.components.seplayerstatus.dayBuyCoin or 0,math.ceil((1 + cycles * achievementMaxBuyRate) * achievementMaxBuy * 1000))
+                else
+                    local age = (player.components.age:GetAgeInDays() or 0) + 1;
+                    msg = msg .. string.format("消费信息：%d/%d",player.components.seplayerstatus.totalBuyCoin or 0,math.ceil((age + age * age * achievementMaxBuyRate / 2) * achievementMaxBuy * 1000))
+                end
             end
-        end
 
-        if msg == "" then
-            msg = "没啥可以显示的！"
+            if msg == "" then
+                msg = "没啥可以显示的！"
+            end
+            player.components.talker:Say(msg,5)
         end
-        player.components.talker:Say(msg,5)
     end
     GLOBAL.Networking_Say = function(guid, userid, name, prefab, message, colour, whisper, isemote)
         local r = OldNetworking_Say(guid, userid, name, prefab, message, colour, whisper, isemote);

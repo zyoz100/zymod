@@ -54,6 +54,7 @@ if bugFixXuaner then
                             if player and not player:HasTag("playerghost") then
                                 local scabbard = player.components.inventory:GetEquippedItem(_G.EQUIPSLOTS.BODY)
                                 if scabbard
+
                                         and scabbard.prefab == "xe_scabbard"
                                         and scabbard.components.container
                                 then

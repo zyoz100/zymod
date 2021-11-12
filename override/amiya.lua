@@ -93,11 +93,20 @@ if amyWeaponDamageGrowthRate > 0 then
         AddPrefabPostInit(v, function(weapon)
             if not weapon.components.zy_weapon_attack then
                 weapon:AddComponent("zy_weapon_attack")
-                weapon.components.zy_weapon_attack:SetDamageRatePerLevel(amyWeaponDamageGrowthRate);
+                weapon.components.zy_weapon_attack:SetDamageRatePerLevel(amyWeaponDamageGrowthRate/100);
                 if amyWeaponMaxLevel > 0 then
                     weapon.components.zy_weapon_attack:SetMaxLevel(amyWeaponMaxLevel);
                 end
+                weapon.components.zy_weapon_attack:update();
             end
         end)
     end
+    AddPrefabPostInit("amiya", function(inst)
+        inst:ListenForEvent("onattackother",function(inst,data)
+            if data.weapon and table.contains(weapons,data.weapon.prefab) and data.weapon.components.zy_weapon_attack then
+                data.weapon.components.zy_weapon_attack:DoDeltaExp(1)
+            end
+        end)
+    end)
+    --onattackother
 end
