@@ -91,12 +91,12 @@ if soraFastMaker then
             if isSora and isEquipHandyCertificate and inst.soralevel ~= nil then
                 soraLevel = inst.soralevel:value();
                 if soraLevel > 29 then
-                    timeout = 2 *  GLOBAL.FRAMES
+                    timeout = 2 * GLOBAL.FRAMES
                 else
-                    timeout = 5 *  GLOBAL.FRAMES
+                    timeout = 5 * GLOBAL.FRAMES
                 end
             elseif isEquipSora2amulet and isEquipHandyCertificate then
-                timeout = 10 *  GLOBAL.FRAMES
+                timeout = 10 * GLOBAL.FRAMES
             end
             inst.sg:GoToState("dolongaction", timeout)
         end
@@ -107,7 +107,7 @@ if soraDoubleMaker > 0 then
     local function GiveOrDropItem(inst, recipe, item, pt)
         if recipe.dropitem then
             local angle = (inst.Transform:GetRotation() + GLOBAL.GetRandomMinMax(-65, 65)) * GLOBAL.DEGREES
-            local r = item:GetPhysicsRadius(0.5) +inst:GetPhysicsRadius(0.5) + 0.1
+            local r = item:GetPhysicsRadius(0.5) + inst:GetPhysicsRadius(0.5) + 0.1
             item.Transform:SetPosition(pt.x + r * math.cos(angle), pt.y, pt.z - r * math.sin(angle))
             item.components.inventoryitem:OnDropped()
         else
@@ -148,22 +148,21 @@ if soraDoubleMaker > 0 then
     end)
 end
 
-
 if soraPackLimit then
     local packPostInit = function(inst)
         if inst and inst.components and inst.components.sorapacker then
             local oldCanPackFn = inst.components.sorapacker.canpackfn
             inst.components.sorapacker:SetCanPackFn(function(target, inst2)
                 if target:HasTag("multiplayer_portal") --天体门
-                    or target.prefab == "pigking" --猪王
-                    or target.prefab == "beequeenhivegrown"--蜂王窝-底座
-                    or target.prefab == "statueglommer"--格罗姆雕像
-                    or target.prefab == "oasislake"--绿洲
+                        or target.prefab == "pigking" --猪王
+                        or target.prefab == "beequeenhivegrown"--蜂王窝-底座
+                        or target.prefab == "statueglommer"--格罗姆雕像
+                        or target.prefab == "oasislake"--绿洲
 
-                    or target.prefab == "elecourmaline"--电器台
-                    or target.prefab == "elecourmaline_keystone" --
+                        or target.prefab == "elecourmaline"--电器台
+                        or target.prefab == "elecourmaline_keystone" --
 
-                    or target.prefab == "myth_rhino_desk"--电器台
+                        or target.prefab == "myth_rhino_desk"--电器台
                 then
                     return false;
                 else
@@ -179,12 +178,12 @@ if soraPackFL then
     AddComponentPostInit("sorafl", function(self)
         local oldInit = self.Init;
         function self:Init()
-            if not self.has  then
+            if not self.has then
                 local fl = GLOBAL.SpawnPrefab("sora_fl")
                 fl.components.sorabind:Bind(self.inst.userid)
                 local pack = GLOBAL.SpawnPrefab("sorapacker")
                 local valid = false;
-                if pack and pack.components.sorapacker:Pack(fl,self.inst,true) then
+                if pack and pack.components.sorapacker:Pack(fl, self.inst, true) then
                     self.inst.components.inventory:GiveItem(pack)
                     valid = true
                 end

@@ -14,13 +14,13 @@ if lazyTechKJKLimit then
             end
             local isClothing = isEquippable and (isBody or isHead);
             local valid = false;
-            if  lazyTechKJKLimit == "equipment" then
+            if lazyTechKJKLimit == "equipment" then
                 valid = isEquippable;
-            elseif lazyTechKJKLimit == "weaponAndClothing"  then
+            elseif lazyTechKJKLimit == "weaponAndClothing" then
                 valid = isWeapon or isClothing;
-            elseif lazyTechKJKLimit == "clothing"  then
+            elseif lazyTechKJKLimit == "clothing" then
                 valid = isClothing;
-            elseif lazyTechKJKLimit == "weapon"  then
+            elseif lazyTechKJKLimit == "weapon" then
                 valid = isWeapon;
             end
             if not valid and inst.components.lrhc_wxnj then

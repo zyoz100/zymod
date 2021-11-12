@@ -3,8 +3,7 @@ local chogathSkillOneGetMoreSoul = GetModConfigData("chogathSkillOneGetMoreSoul"
 local chogathSkillOneCDImprove = GetModConfigData("chogathSkillOneCDImprove") or 1;
 local chogathSkillOneDamageImprove = GetModConfigData("chogathSkillOneDamageImprove") or false;
 
-
-if chogathSkillOneCDImprove < 1 or chogathSkillOneGetMoreSoul>0 or chogathSkillOneDamageImprove then
+if chogathSkillOneCDImprove < 1 or chogathSkillOneGetMoreSoul > 0 or chogathSkillOneDamageImprove then
 
     local namespace = "workshop-2245132201"
 
@@ -22,8 +21,8 @@ if chogathSkillOneCDImprove < 1 or chogathSkillOneGetMoreSoul>0 or chogathSkillO
             if victim and victim.components.health then
                 --把血量大于等于2000的都归为boss吧
                 local maxHealth = victim.components.health.maxhealth;
-                if chogathSkillOneGetMoreSoul>0 then
-                    local healthRate = math.max(math.sqrt(maxHealth,2)/chogathSkillOneGetMoreSoul,1)
+                if chogathSkillOneGetMoreSoul > 0 then
+                    local healthRate = math.max(math.sqrt(maxHealth, 2) / chogathSkillOneGetMoreSoul, 1)
                     inst.level = inst.level + healthRate
                 else
                     if maxHealth >= 2000 then
@@ -65,7 +64,7 @@ if chogathSkillOneCDImprove < 1 or chogathSkillOneGetMoreSoul>0 or chogathSkillO
         if inst.SkillOneUse and target then
             local basemultiplier = inst.components.combat.damagemultiplier or 1;
             local externaldamagemultipliers = 1;
-            if chogathSkillOneDamageImprove and  inst.components.combat and inst.components.combat.externaldamagemultipliers then
+            if chogathSkillOneDamageImprove and inst.components.combat and inst.components.combat.externaldamagemultipliers then
                 externaldamagemultipliers = inst.components.combat.externaldamagemultipliers:Get() or 1;
             end
             local damageNum = (100 + inst.level * 20) * externaldamagemultipliers * basemultiplier --伤害计算 100+层数*20 *攻击倍率

@@ -73,7 +73,7 @@ function zyWeapon:DoDeltaExp(value)
                 else
                     level = max_level;
                     exp = 0;
-                    break;
+                    break ;
                 end
             elseif exp < 0 then
                 if level > 0 then
@@ -82,7 +82,7 @@ function zyWeapon:DoDeltaExp(value)
                 else
                     level = 0;
                     exp = 0;
-                    break;
+                    break ;
                 end
             else
                 break ;

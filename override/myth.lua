@@ -25,7 +25,7 @@ if mythFlyingSpeedMultiplier > 0 then
             if self.inst.components.mk_flyer ~= nil and self.inst.components.mk_flyer:IsFlying() then
 
                 local speedMultiplier = self:GetSpeedMultiplier() - 1;
-                if speedMultiplier >0 then
+                if speedMultiplier > 0 then
                     speedMultiplier = speedMultiplier * mythFlyingSpeedMultiplier + 1;
                 else
                     speedMultiplier = 1;

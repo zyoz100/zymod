@@ -311,7 +311,7 @@ if achievementGetMorePoints > 0 then
     )
 end
 
-if achievementMaxBuy > 0 or achievementBuyCD >0 then
+if achievementMaxBuy > 0 or achievementBuyCD > 0 then
     local namespace = "SimpleEconomy";
     local buyHandle = GLOBAL.MOD_RPC_HANDLERS[namespace][GLOBAL.MOD_RPC[namespace]["buy_fix"].id];
     AddComponentPostInit("seplayerstatus", function(self)
@@ -332,11 +332,11 @@ if achievementMaxBuy > 0 or achievementBuyCD >0 then
         end
     end)
     GLOBAL.MOD_RPC_HANDLERS[namespace][GLOBAL.MOD_RPC[namespace]["buy_fix"].id] = function(player, i, title, more)
-        if achievementBuyCD>0  then
+        if achievementBuyCD > 0 then
             local lastBuyTime = player.components.seplayerstatus.lastBuyTime or 0;
-            if GLOBAL.GetTime() - lastBuyTime< achievementBuyCD then
-                player.components.talker:Say("购买冷却"..achievementBuyCD.."秒")
-                return;
+            if GLOBAL.GetTime() - lastBuyTime < achievementBuyCD then
+                player.components.talker:Say("购买冷却" .. achievementBuyCD .. "秒")
+                return ;
             end
         end
         if achievementMaxBuy > 0 then
@@ -397,7 +397,7 @@ if achievementMaxBuy > 0 or achievementBuyCD >0 then
                     player.components.talker:Say("您今天已经消费到上限（" .. dayBuyCoin .. "/" .. maxBuy .. "）")
                 else
                     player.components.seplayerstatus.dayBuyCoin = dayBuyCoin + cost;
-                    if achievementBuyCD>0 then
+                    if achievementBuyCD > 0 then
                         player.components.seplayerstatus.lastBuyTime = GLOBAL.GetTime();
                     end
                     buyHandle(player, i, title, more);
@@ -409,14 +409,14 @@ if achievementMaxBuy > 0 or achievementBuyCD >0 then
                     player.components.talker:Say("您已经消费到上限（" .. totalBuyCoin .. "/" .. maxBuy .. "）")
                 else
                     player.components.seplayerstatus.totalBuyCoin = totalBuyCoin + cost;
-                    if achievementBuyCD>0 then
+                    if achievementBuyCD > 0 then
                         player.components.seplayerstatus.lastBuyTime = GLOBAL.GetTime();
                     end
                     buyHandle(player, i, title, more);
                 end
             end
         else
-            if achievementBuyCD>0 then
+            if achievementBuyCD > 0 then
                 player.components.seplayerstatus.lastBuyTime = GLOBAL.GetTime();
             end
             buyHandle(player, i, title, more);
@@ -433,17 +433,17 @@ if achievementShowInfo then
             local cycles = GLOBAL.TheWorld.state.cycles or 1;
             if achievementMaxBuy and player.components.seplayerstatus then
                 if achievementMaxBuyMode == 0 then
-                    msg = msg .. string.format("当日消费信息：%d/%d",player.components.seplayerstatus.dayBuyCoin or 0,math.ceil((1 + cycles * achievementMaxBuyRate) * achievementMaxBuy * 1000))
+                    msg = msg .. string.format("当日消费信息：%d/%d", player.components.seplayerstatus.dayBuyCoin or 0, math.ceil((1 + cycles * achievementMaxBuyRate) * achievementMaxBuy * 1000))
                 else
                     local age = (player.components.age:GetAgeInDays() or 0) + 1;
-                    msg = msg .. string.format("消费信息：%d/%d",player.components.seplayerstatus.totalBuyCoin or 0,math.ceil((age + age * age * achievementMaxBuyRate / 2) * achievementMaxBuy * 1000))
+                    msg = msg .. string.format("消费信息：%d/%d", player.components.seplayerstatus.totalBuyCoin or 0, math.ceil((age + age * age * achievementMaxBuyRate / 2) * achievementMaxBuy * 1000))
                 end
             end
 
             if msg == "" then
                 msg = "没啥可以显示的！"
             end
-            player.components.talker:Say(msg,5)
+            player.components.talker:Say(msg, 5)
         end
     end
     GLOBAL.Networking_Say = function(guid, userid, name, prefab, message, colour, whisper, isemote)
@@ -463,7 +463,7 @@ if achievementShowInfo then
         end
         return false
     end
-    AddPrefabPostInit("vipcard",function(inst)
+    AddPrefabPostInit("vipcard", function(inst)
         inst:AddComponent("useableitem")
         inst.components.useableitem:SetOnUseFn(onuse)
     end)

@@ -37,7 +37,7 @@ function zyWeaponAttack:update()
                 level,
                 exp,
                 levelExp,
-                math.ceil(level * self.damageRatePerLevel  * 100)
+                math.ceil(level * self.damageRatePerLevel * 100)
         ))
     end
 end

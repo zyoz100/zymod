@@ -80,7 +80,7 @@ if yuanziRepairMore > 0 then
                         if inst.components.armor ~= nil then
                             local condition = inst.components.armor.condition
                             local maxcondition = inst.components.armor.maxcondition
-                            inst.components.armor:SetCondition(math.min(maxcondition,condition + maxcondition * yuanziRepairMore))
+                            inst.components.armor:SetCondition(math.min(maxcondition, condition + maxcondition * yuanziRepairMore))
                         end
                     end
                 end
@@ -111,7 +111,7 @@ if yuanziOverlordMoreDamage > 0 then
 end
 
 if yuanziPickMore > 0 then
-    local notpick = {statueglommer = 1, neverfadebush = 1,plant_certificate=1}
+    local notpick = { statueglommer = 1, neverfadebush = 1, plant_certificate = 1 }
     local function onpick(inst, data)
         if data.object
                 and data.object.components.pickable

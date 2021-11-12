@@ -1,7 +1,7 @@
 local _G = GLOBAL;
 local randomSizeLimit = GetModConfigData("randomSizeLimit") or false;
 local randomSizeEnhance = GetModConfigData("randomSizeEnhance") or 0;
-if randomSizeEnhance<2 then
+if randomSizeEnhance < 2 then
     randomSizeEnhance = 2
 end
 if randomSizeLimit then
@@ -600,7 +600,7 @@ if randomSizeLimit then
     }
 
     local shss = {
-        "peachtree_myth","mk_jgb_pillar","peach","myth_coin","myth_cash_tree_ground","bigpeach","myth_small_goldfrog","myth_goldfrog_base",
+        "peachtree_myth", "mk_jgb_pillar", "peach", "myth_coin", "myth_cash_tree_ground", "bigpeach", "myth_small_goldfrog", "myth_goldfrog_base",
     }
 
     local function qianghuaOverride(inst)

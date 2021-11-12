@@ -53,8 +53,8 @@ end
 
 --狐狸
 if _G.isModEnableById("1694540893")
-        or  _G.isModEnableById("2259379465")
-        or  _G.isModEnableById("2215151821") then
+        or _G.isModEnableById("2259379465")
+        or _G.isModEnableById("2215151821") then
     modimport("override/huli")
 end
 

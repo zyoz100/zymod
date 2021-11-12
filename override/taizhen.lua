@@ -247,7 +247,6 @@ if taizhenTfSwordSkillRate > -1 then
 
     end
 
-
     AddPrefabPostInit("tz_tfsword", function(inst)
         inst:AddTag("rechargeable")
 

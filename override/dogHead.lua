@@ -38,7 +38,7 @@ if dogheadSkillDamageImprove > 0 or dogheadSkillGetMoreSoul > 0 then
             end
             inst.attackTime = false
             local weapon = inst.components.combat:GetWeapon()
-            if not weapon  or weapon.prefab ~= "soul_harvester" then
+            if not weapon or weapon.prefab ~= "soul_harvester" then
                 inst.attackTime = true
                 return
             end

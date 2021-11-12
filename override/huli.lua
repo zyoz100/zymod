@@ -1,7 +1,7 @@
 local _G = GLOBAL;
 local huliShopFix = GetModConfigData("huliShopFix") or true;
 local getHuliStoreSet = function()
-    return ( GLOBAL.HULI_STORE_SET == 0)
+    return (GLOBAL.HULI_STORE_SET == 0)
             or (GLOBAL.HULI_STORE_SET == "开启")
 end
 if huliShopFix and not getHuliStoreSet() then
@@ -20,7 +20,6 @@ if huliShopFix and not getHuliStoreSet() then
             oldItemBuyFn(...)
         end
     end
-
 
     local oldLuckDrawFn = _G.MOD_RPC_HANDLERS[namespace2][_G.MOD_RPC[namespace2]["LuckDrawFn"].id];
     _G.MOD_RPC_HANDLERS[namespace2][_G.MOD_RPC[namespace2]["LuckDrawFn"].id] = function(...)

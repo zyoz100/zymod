@@ -413,7 +413,7 @@ if baseReduceAnnounce > 0 then
                 time = _G.GetTime(),
                 text = text,
             })
-            SendModRPCToShard(SHARD_MOD_RPC["zy"]["announce"],text,_G.GetTime())
+            SendModRPCToShard(SHARD_MOD_RPC["zy"]["announce"], text, _G.GetTime())
             return oldAnnounce(Net, text, ...)
         else
             _G.announceList = announceList
@@ -421,7 +421,7 @@ if baseReduceAnnounce > 0 then
 
     end
 
-    AddShardModRPCHandler( "zy", "announce", function(value,time)
+    AddShardModRPCHandler("zy", "announce", function(value, time)
         if value and type(value) == "string" then
             _G.announceList = _G.announceList or {};
             table.insert(_G.announceList, {
