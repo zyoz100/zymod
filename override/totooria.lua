@@ -312,7 +312,9 @@ local totooriastaffPostInit = function(inst)
             if oldonunequipfn then
                 oldonunequipfn(inst, owner)
             end
-            owner.components.combat.externaldamagemultipliers:SetModifier("zy_t_staff", 1)
+            if owner.components.combat then
+                owner.components.combat.externaldamagemultipliers:SetModifier("zy_t_staff", 1)
+            end
         end
     end
     if inst ~= nil and

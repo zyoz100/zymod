@@ -2,7 +2,8 @@ local _G = GLOBAL;
 local randomSizeEnhance = GetModConfigData("randomSizeEnhance") or 0;
 if randomSizeEnhance > 0 then
     local List = {
-        "moose", "antlion", "bearger", "deerclops", "beequeen", "dragonfly",
+        "moose", "antlion", "bearger", "deerclops",
+        "klaus", "beequeen", "dragonfly",
         "shadow_rook", "shadow_bishop", "shadow_knight",
         "minotaur", "toadstool", "toadstool_dark", "stalker_atrium",
         "spat", "warg", "spiderqueen", "leif", "leif_sparse"
@@ -58,7 +59,6 @@ if randomSizeEnhance > 0 then
     for k, v in pairs(List) do
         AddPrefabPostInit(v, Strong)
     end
-    _G.TUNING.KLAUS_HEALTH = _G.TUNING.ANTLION_HEALTH * randomSizeEnhance
     --_G.TUNING.ANTLION_HEALTH = _G.TUNING.ANTLION_HEALTH * randomSizeEnhance
     --_G.TUNING.LEIF_HEALTH = _G.TUNING.LEIF_HEALTH * randomSizeEnhance
     --_G.TUNING.LEIF_DAMAGE = _G.TUNING.LEIF_DAMAGE * randomSizeEnhance
