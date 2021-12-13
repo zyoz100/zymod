@@ -7,27 +7,27 @@ local totooriaPhilosopherstoneKJKLimit = GetModConfigData("totooriaPhilosopherst
 local totooriaPhilosopherstoneLimit = GetModConfigData("totooriaPhilosopherstoneLimit") or false
 local totooriaStaffRandomDamage = GetModConfigData("totooriaStaffRandomDamage") or 0
 
+local handle = require("common")
+
 --	托托莉
 --		多倍收锅
 if totooriaMultipleStewer > 0 then
     local stewerFood = function(harvester, _self, num)
-        local loot = GLOBAL.SpawnPrefab(_self.product)
-        if loot ~= nil then
+        if GLOBAL.PrefabExists(_self.product) then
             local recipe = cooking.GetRecipe(_self.inst.prefab, _self.product)
-            local stacksize = recipe and recipe.stacksize or 1
-
-            if stacksize > 1 then
-                loot.components.stackable:SetStackSize(stacksize)
-            end
-            if _self.spoiltime ~= nil and loot.components.perishable ~= nil then
-                local spoilpercent = _self:GetTimeToSpoil() / _self.spoiltime
-                loot.components.perishable:SetPercent(_self.product_spoilage * spoilpercent)
-                loot.components.perishable:StartPerishing()
-            end
-            if harvester ~= nil and harvester.components.inventory ~= nil then
-                harvester.components.inventory:GiveItem(loot, nil, _self.inst:GetPosition())
-            else
-                GLOBAL.LaunchAt(loot, _self.inst, nil, 1, 1)
+            local stackSize = recipe and recipe.stacksize or 1
+            local loots = handle.createItems(_self.product,stackSize * num)
+            for index, loot in pairs(loots) do
+                if _self.spoiltime ~= nil and loot.components.perishable ~= nil then
+                    local spoilpercent = _self:GetTimeToSpoil() / _self.spoiltime
+                    loot.components.perishable:SetPercent(_self.product_spoilage * spoilpercent)
+                    loot.components.perishable:StartPerishing()
+                end
+                if harvester ~= nil and harvester.components.inventory ~= nil then
+                    harvester.components.inventory:GiveItem(loot, nil, _self.inst:GetPosition())
+                else
+                    GLOBAL.LaunchAt(loot, _self.inst, nil, 1, 1)
+                end
             end
         end
     end
@@ -63,9 +63,7 @@ if totooriaMultipleStewer > 0 then
                                     end
                                     count = math.floor(count / totooriaMultipleStewer);
                                     count = math.max(count, 2);
-                                    for i = 1, count - 1 do
-                                        stewerFood(harvester, self)
-                                    end
+                                    stewerFood(harvester, self, count - 1)
                                 end
                             end
                         end

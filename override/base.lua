@@ -336,49 +336,9 @@ end
 
 if baseDropDisappear > 0 then
     -- 参照Yeo的代码 https://github.com/zYeoman/DST_mod/blob/master/postinit/c_lootdropper.lua
-    local CancelDisappear = function(inst)
-        if inst._disappear then
-            inst._disappear:Cancel()
-        end
-        if inst._disappear_anim then
-            inst._disappear_anim:Cancel()
-        end
-        inst._disappear = nil;
-        inst._disappear_anim = nil;
-        inst.AnimState:SetMultColour(1, 1, 1, 1)
-    end
-    local disappear = function(loot)
-        loot:ListenForEvent("onpickup", function()
-            CancelDisappear(loot)
-        end)
-        loot:ListenForEvent("onputininventory", function()
-            CancelDisappear(loot)
-        end)
-        loot._disappear = loot:DoTaskInTime(baseDropDisappear, function()
-            if loot:IsValid()
-                    and loot.components.inventoryitem
-                    and not loot.components.inventoryitem:GetContainer() then
-                loot:Remove()
-            end
-        end)
-        loot._disappear_anim = loot:DoTaskInTime(baseDropDisappear - 40, function()
-            for j = 1, 30, 2 do
-                for i = 10, 3, -1 do
-                    loot:DoTaskInTime(j - i / 10, function()
-                        loot.AnimState:SetMultColour(i / 10, i / 10, i / 10, i / 10)
-                    end)
-                    loot:DoTaskInTime(j + i / 10, function()
-                        loot.AnimState:SetMultColour(i / 10, i / 10, i / 10, i / 10)
-                    end)
-                end
-            end
-            for i = 10, 3, -1 do
-                loot:DoTaskInTime(31 - i / 10, function()
-                    loot.AnimState:SetMultColour(i / 10, i / 10, i / 10, i / 10)
-                end)
-            end
-        end)
-    end
+    local CreateDisappearFn = require("disappear")
+    local disappear = CreateDisappearFn(baseDropDisappear)
+
     AddPrefabPostInitAny(function(inst)
         if inst and inst.components.inventoryitem then
             inst:ListenForEvent("on_loot_dropped", function(loot, data)

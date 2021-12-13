@@ -1,6 +1,8 @@
 local _G = GLOBAL;
+local bugFixXuaner = GetModConfigData("bugFixXuaner") or false
+local bugFixLy = GetModConfigData("bugFixLy") or false
 --璇儿装备bug --xe_knife
-if _G.isModEnableById("2582670245") then
+if bugFixXuaner and _G.isModEnableById("2582670245") then
     AddPrefabPostInit("xe_scabbard", function(inst)
         if inst
                 and inst.components
@@ -198,4 +200,16 @@ if _G.isModEnableById("2582670245") then
         end
     end)
 end
---希尔
+--附魔
+if bugFixLy then
+    AddPrefabPostInit("ly_magical_shadow", function(inst)
+        if inst.Attack then
+            local oldAttack = inst.Attack;
+            inst.Attack = function(self)
+                if self.target.components.combat then
+                    oldAttack(self)
+                end
+            end
+        end
+    end)
+end

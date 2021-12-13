@@ -385,35 +385,41 @@ if achievementMaxBuy > 0 or achievementBuyCD > 0 then
                     cost = 0;
                 end
             end
-            if achievementMaxBuyMode == 0 then
-                local maxBuy = math.ceil((1 + cycles * achievementMaxBuyRate) * achievementMaxBuy * 1000);
-                local dayOfBuy = (player.components.seplayerstatus.dayOfBuy or 0)
-                if dayOfBuy ~= GLOBAL.TheWorld.state.cycles then
-                    player.components.seplayerstatus.dayBuyCoin = 0;
-                    player.components.seplayerstatus.dayOfBuy = GLOBAL.TheWorld.state.cycles
-                end
-                local dayBuyCoin = (player.components.seplayerstatus.dayBuyCoin or 0)
-                if dayOfBuy == GLOBAL.TheWorld.state.cycles and dayBuyCoin > maxBuy then
-                    player.components.talker:Say("您今天已经消费到上限（" .. dayBuyCoin .. "/" .. maxBuy .. "）")
-                else
-                    player.components.seplayerstatus.dayBuyCoin = dayBuyCoin + cost;
-                    if achievementBuyCD > 0 then
-                        player.components.seplayerstatus.lastBuyTime = GLOBAL.GetTime();
+            local continue = true;
+            if player.components.seplayerstatus.coin >= math.ceil(iprice*discount*amount) and cost > 0 then
+                if achievementMaxBuyMode == 0 then
+                    local maxBuy = math.ceil((1 + cycles * achievementMaxBuyRate) * achievementMaxBuy * 1000);
+                    local dayOfBuy = (player.components.seplayerstatus.dayOfBuy or 0)
+                    if dayOfBuy ~= GLOBAL.TheWorld.state.cycles then
+                        player.components.seplayerstatus.dayBuyCoin = 0;
+                        player.components.seplayerstatus.dayOfBuy = GLOBAL.TheWorld.state.cycles
                     end
-                    buyHandle(player, i, title, more);
-                end
-            elseif achievementMaxBuyMode == 1 then
-                local maxBuy = math.ceil((age + age * age * achievementMaxBuyRate / 2) * achievementMaxBuy * 1000); --偷懒算法
-                local totalBuyCoin = (player.components.seplayerstatus.totalBuyCoin or 0)
-                if totalBuyCoin > maxBuy then
-                    player.components.talker:Say("您已经消费到上限（" .. totalBuyCoin .. "/" .. maxBuy .. "）")
-                else
-                    player.components.seplayerstatus.totalBuyCoin = totalBuyCoin + cost;
-                    if achievementBuyCD > 0 then
-                        player.components.seplayerstatus.lastBuyTime = GLOBAL.GetTime();
+                    local dayBuyCoin = (player.components.seplayerstatus.dayBuyCoin or 0)
+                    if dayOfBuy == GLOBAL.TheWorld.state.cycles and dayBuyCoin > maxBuy then
+                        player.components.talker:Say("您今天已经消费到上限（" .. dayBuyCoin .. "/" .. maxBuy .. "）")
+                        continue = false;
+                    else
+                        player.components.seplayerstatus.dayBuyCoin = dayBuyCoin + cost;
+                        if achievementBuyCD > 0 then
+                            player.components.seplayerstatus.lastBuyTime = GLOBAL.GetTime();
+                        end
                     end
-                    buyHandle(player, i, title, more);
+                elseif achievementMaxBuyMode == 1 then
+                    local maxBuy = math.ceil((age + age * age * achievementMaxBuyRate / 2) * achievementMaxBuy * 1000); --偷懒算法
+                    local totalBuyCoin = (player.components.seplayerstatus.totalBuyCoin or 0)
+                    if totalBuyCoin > maxBuy then
+                        player.components.talker:Say("您已经消费到上限（" .. totalBuyCoin .. "/" .. maxBuy .. "）")
+                        continue = false;
+                    else
+                        player.components.seplayerstatus.totalBuyCoin = totalBuyCoin + cost;
+                        if achievementBuyCD > 0 then
+                            player.components.seplayerstatus.lastBuyTime = GLOBAL.GetTime();
+                        end
+                    end
                 end
+            end
+            if continue then
+                buyHandle(player, i, title, more);
             end
         else
             if achievementBuyCD > 0 then

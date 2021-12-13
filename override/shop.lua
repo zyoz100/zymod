@@ -2,7 +2,6 @@ local _G = GLOBAL
 local shopSellRate = GetModConfigData("shopSellRate") or 0;
 local shopSellValidBySora = GetModConfigData("shopSellValidBySora") or 0;
 local shopCoolDown = GetModConfigData("shopCoolDown") or 0;
-local shopCanByHSH = GetModConfigData("shopCanByHSH") or false;
 
 if shopSellRate > 0 then
     local findGoods = function(name)
@@ -19,9 +18,9 @@ if shopSellRate > 0 then
         end
         return res;
     end
-
+    local DEFAULT_SELL_PRICE = 2;
     if shopSellValidBySora > 0 then
-        local DEFAULT_SELL_PRICE = 2;
+
         -- copy from sora
         local changelist = {
             ice = "charcoal",
@@ -281,140 +280,6 @@ if shopCoolDown > 0 then
     end
 end
 
-if shopCanByHSH then
-    local ach_cost = GLOBAL.TUNING.STORE_GOODS_ACH_COST * 2
-
-    table.insert(GLOBAL.TUNING.STORE_GOODS["other"], 1, {
-        name = "2点血上限",
-        type = "health",
-        price = ach_cost
-    })
-    table.insert(GLOBAL.TUNING.STORE_GOODS["other"], 1, {
-        name = "2点san上限",
-        type = "san",
-        price = ach_cost
-    })
-    table.insert(GLOBAL.TUNING.STORE_GOODS["other"], 1, {
-        name = "2点饥饿上限",
-        type = "hungry",
-        price = ach_cost
-    })
-
-    AddComponentPostInit("playercoin", function(com)
-        com.healthAmount = 0;
-        com.sanAmount = 0;
-        com.hungryAmount = 0;
-        function com:DoDeltaHealthAmount(value)
-            local inst = com.inst;
-            local _v = tonumber(value) or 0;
-            com.healthAmount = com.healthAmount + _v
-            local health_percent = inst.components.health:GetPercent()
-            inst.components.health.maxhealth = math.max(inst.components.health.maxhealth + _v * 2, 10)
-            inst.components.health:SetPercent(health_percent)
-            com.healthmax = inst.components.health.maxhealth;
-        end
-
-        function com:DoDeltaSanAmount(value)
-            local inst = com.inst;
-            local _v = tonumber(value) or 0;
-            com.sanAmount = com.sanAmount + _v
-            local sanity_percent = inst.components.sanity:GetPercent()
-            inst.components.sanity:SetMax(math.max(inst.components.sanity.max + _v * 2, 10))
-            inst.components.sanity:SetPercent(sanity_percent)
-            com.sanitymax = inst.components.sanity.max
-        end
-
-        function com:DoDeltaHungryAmount(value)
-            local inst = com.inst;
-            local _v = tonumber(value) or 0;
-            com.hungryAmount = com.hungryAmount + _v
-            local hunger_percent = inst.components.hunger:GetPercent()
-            inst.components.hunger:SetMax(math.max(inst.components.hunger.max + _v * 2, 10))
-            inst.components.hunger:SetPercent(hunger_percent)
-            com.hungermax = inst.components.hunger.max
-        end
-
-        local oldOnSave = com.OnSave
-        function com:OnSave(...)
-            local data = oldOnSave(com, ...)
-            data.healthAmount = com.healthAmount or 0;
-            data.sanAmount = com.sanAmount or 0;
-            data.hungryAmount = com.hungryAmount or 0;
-            return data;
-        end
-
-        local oldOnLoad = com.OnLoad
-        function com:OnLoad(data, ...)
-            local result = oldOnLoad(com, data, ...)
-            com.healthAmount = data.healthAmount or 0;
-            com.sanAmount = data.sanAmount or 0;
-            com.hungryAmount = data.hungryAmount or 0;
-            return result;
-        end
-        function com:updateStatus()
-            local inst = com.inst;
-            if com.hungermax ~= inst.components.hunger.max then
-                local hunger_percent = inst.components.hunger:GetPercent()
-                inst.components.hunger:SetMax(inst.components.hunger.max + com.hungryAmount * 2)
-                inst.components.hunger:SetPercent(hunger_percent)
-                com.hungermax = inst.components.hunger.max
-            end
-
-            if com.sanitymax ~= inst.components.sanity.max then
-                local sanity_percent = inst.components.sanity:GetPercent()
-                inst.components.sanity:SetMax(inst.components.sanity.max + com.sanAmount * 2)
-                inst.components.sanity:SetPercent(sanity_percent)
-                com.sanitymax = inst.components.sanity.max
-            end
-
-            if com.healthmax ~= inst.components.health.maxhealth then
-                local health_percent = inst.components.health:GetPercent()
-                inst.components.health.maxhealth = inst.components.health.maxhealth + com.healthAmount * 2
-                inst.components.health:SetPercent(health_percent)
-                com.healthmax = inst.components.health.maxhealth
-            end
-        end
-
-        com.inst:DoPeriodicTask(GLOBAL.FRAMES * 3, function()
-            com:updateStatus()
-        end)
-    end)
-
-    local shopNameSpace = "store";
-    local ShopBuyKey = "store_b";
-    local oldFn = _G.MOD_RPC_HANDLERS[shopNameSpace][_G.MOD_RPC[shopNameSpace][ShopBuyKey].id]
-    _G.MOD_RPC_HANDLERS[shopNameSpace][_G.MOD_RPC[shopNameSpace][ShopBuyKey].id] = function(player, k, goodstype, mode)
-        if k ~= nil and goodstype ~= nil then
-            if TUNING.STORE_GOODS[goodstype] ~= nil and TUNING.STORE_GOODS[goodstype][k] ~= nil then
-                local name = TUNING.STORE_GOODS[goodstype][k][1] ~= nil and TUNING.STORE_GOODS[goodstype][k][1] or TUNING.STORE_GOODS[goodstype][k].name
-                local price = TUNING.STORE_GOODS[goodstype][k][2] ~= nil and TUNING.STORE_GOODS[goodstype][k][2] or TUNING.STORE_GOODS[goodstype][k].price
-                local type = TUNING.STORE_GOODS[goodstype][k][3] ~= nil and TUNING.STORE_GOODS[goodstype][k][2] or TUNING.STORE_GOODS[goodstype][k].type
-                if type == "health" or type == "san" or type == "hungry" then
-                    local coin = player.components.playercoin:GetCoin();
-                    local num = 1;
-                    if mode then
-                        num = math.min(math.ceil(coin / ach_cost), 10)
-                    end
-                    if num > 0 and coin >= num * ach_cost then
-                        if type == "health" then
-                            player.components.playercoin:DoDeltaHealthAmount(num)
-                        end
-                        if type == "san" then
-                            player.components.playercoin:DoDeltaSanAmount(num)
-                        end
-                        if type == "hungry" then
-                            player.components.playercoin:DoDeltaHungryAmount(num)
-                        end
-                        player.components.playercoin:Reduce(num * ach_cost)
-                        return ;
-                    end
-                    return
-                end
-            end
-        end
-        oldFn(player, k, goodstype, mode);
-    end
-end
 
 
 

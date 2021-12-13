@@ -92,6 +92,50 @@ configuration_options = {
         },
         default = 5
     },
+    {--
+        name = "baseReduceCombatExternalDamageMultipliersAdjust",
+        label = "额外攻击倍率计算变成加算",
+        hover = "极大削弱人物档的人物强度和药剂作用",
+        options = {
+            { description = "关闭", data = false },
+            { description = "开启", data = true },
+        },
+        default = false
+    },
+    {
+        name = "bugFix",
+        label = "一些bug修正",
+        hover = "如果有冲突或者作者更新修复请关闭对应的设置",
+        options = { { description = "", data = "" } },
+        default = ""
+    },
+    {--
+        name = "bugFixXuaner",
+        label = "璇儿",
+        options = {
+            { description = "修正", data = true },
+            { description = "不修正", data = false },
+        },
+        default = true
+    },
+    {--
+        name = "bugFixLy",
+        label = "附魔",
+        options = {
+            { description = "修正", data = true },
+            { description = "不修正", data = false },
+        },
+        default = true
+    },
+    {--
+        name = "bugFixFangXiong",
+        label = "防熊max",
+        options = {
+            { description = "修正", data = true },
+            { description = "不修正", data = false },
+        },
+        default = true
+    },
     {
         name = "myth",
         label = "神话设置",
@@ -641,6 +685,16 @@ configuration_options = {
         default = "weaponAndClothing"
     },
     {
+        name = "lazyTechHDSelectOptimize",
+        label = "火堆检测优化",
+        hover = "现在会检查是否有怠惰火堆改装的箱子烧可燃物",
+        options = {
+            { description = "不优化", data = false },
+            { description = "优化", data = true },
+        },
+        default = true
+    },
+    {
         name = "randomSize",
         label = "随机生物大小",
         options = { { description = "", data = "" } },
@@ -944,6 +998,72 @@ configuration_options = {
             { description = "90%", data = 0.9 },
         },
         default = 0.3
+    },
+    {
+        name = "shop",
+        label = "无眼鹿的新商店",
+        options = { { description = "", data = "" } },
+        default = ""
+    },
+    {
+        name = "shopSellRate",
+        label = "商店出售倍率",
+        hover = "原版每个只卖2块，这个是按买价的比例给金币",
+        options = {
+            { description = "原版", data = 0 },
+            { description = "10%", data = 0.1 },
+            { description = "20%", data = 0.2 },
+            { description = "25%", data = 0.25 },
+            { description = "50%", data = 0.5 },
+            { description = "75%", data = 0.75 },
+            { description = "100%", data = 1 },
+        },
+        default = 0.25
+    },
+    {
+        name = "shopSellValidBySora",
+        label = "因为穹一些东西卖价会不太一样",
+        hover = "如果贩卖价格超过转换前物品价格的设置值倍数 则认为只能卖这个价格",
+        options = {
+            { description = "不改变", data = 0 },
+            { description = "不能超过110%", data = 1.1 },
+            { description = "不能超过125%", data = 1.25 },
+            { description = "不能超过150%", data = 1.5 },
+            { description = "不能超过175%", data = 1.75 },
+            { description = "不能超过200%", data = 2.00 },
+        },
+        default = 0
+    },
+    {
+        name = "shopCoolDown",
+        label = "购买Cd",
+        options = {
+            { description = "不改变", data = 0 },
+            { description = "0.1秒", data = 0.1 },
+            { description = "0.2秒", data = 0.2 },
+            { description = "0.5秒", data = 0.5 },
+            { description = "1秒", data = 1 },
+            { description = "2秒", data = 2 },
+            { description = "4秒", data = 4 },
+            { description = "5秒", data = 5 },
+        },
+        default = 0.2
+    },
+    {
+        name = "functionalMedal",
+        label = "能力勋章",
+        options = { { description = "", data = "" } },
+        default = ""
+    },
+    {
+        name = "monsterBookChessPieceNotRemove",
+        label = "怪物书不会移除祭品",
+        hover = "方便大量刷特定的boss",
+        options = {
+            { description = "原版", data = false },
+            { description = "不移除", data = true },
+        },
+        default = true
     },
 }
 --错误追踪

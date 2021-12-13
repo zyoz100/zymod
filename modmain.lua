@@ -91,6 +91,16 @@ if _G.isModEnableById("1757943227") then
     modimport("override/seele")
 end
 
+--shop
+if _G.isModEnableById("2467471767") then
+    modimport("override/shop")
+end
+
+--functional medal
+if _G.isModEnableById("1909182187") then
+    modimport("override/functionalMedal")
+end
+
 
 
 
