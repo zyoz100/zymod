@@ -9,12 +9,16 @@ local createItems = function(name,num)
         end
         local totalStackSize = (GLOBAL.tonumber(num) or 1)
         while totalStackSize > 0 do
+            if not item then
+                item = GLOBAL.SpawnPrefab(name)
+            end
             local s = math.min(totalStackSize,maxStackSize);
             if  item.components.stackable then
                 item.components.stackable:SetStackSize(s)
             end
             table.insert(res,item)
             totalStackSize = totalStackSize-s;
+            item = nil;
         end
     end
     return res;
