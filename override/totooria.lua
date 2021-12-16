@@ -7,7 +7,7 @@ local totooriaPhilosopherstoneKJKLimit = GetModConfigData("totooriaPhilosopherst
 local totooriaPhilosopherstoneLimit = GetModConfigData("totooriaPhilosopherstoneLimit") or false
 local totooriaStaffRandomDamage = GetModConfigData("totooriaStaffRandomDamage") or 0
 
-local handle = require("common")
+
 
 --	托托莉
 --		多倍收锅
@@ -16,7 +16,7 @@ if totooriaMultipleStewer > 0 then
         if GLOBAL.PrefabExists(_self.product) then
             local recipe = cooking.GetRecipe(_self.inst.prefab, _self.product)
             local stackSize = recipe and recipe.stacksize or 1
-            local loots = handle.createItems(_self.product, stackSize * num)
+            local loots = commonHandle.createItems(_self.product,stackSize * num)
             for index, loot in pairs(loots) do
                 if _self.spoiltime ~= nil and loot.components.perishable ~= nil then
                     local spoilpercent = _self:GetTimeToSpoil() / _self.spoiltime

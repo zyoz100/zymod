@@ -8,6 +8,16 @@ if baseCombatCanAttackDeath then
     AddComponentPostInit("combat", function(self)
         -- 我是伞兵 不会hook
         function self:GetAttacked(attacker, damage, weapon, stimuli)
+            --兼容乃木园子
+            if self.inst:HasTag("chongshenbuff") then
+                return false
+            end
+            if weapon ~= nil and weapon.prefab == "yuanzi_spear_lv2" or stimuli == "yuanzi_ignoredebuff" then
+                self.inst.yuanzi_ignoredebuff = true
+                damage = damage / self.externaldamagetakenmultipliers:Get()
+            end
+
+
             if self.inst:HasTag("player") and self.inst.components.health and self.inst.components.health:IsDead() then
                 return true
             end
@@ -336,7 +346,7 @@ end
 
 if baseDropDisappear > 0 then
     -- 参照Yeo的代码 https://github.com/zYeoman/DST_mod/blob/master/postinit/c_lootdropper.lua
-    local CreateDisappearFn = require("disappear")
+
     local disappear = CreateDisappearFn(baseDropDisappear)
 
     AddPrefabPostInitAny(function(inst)

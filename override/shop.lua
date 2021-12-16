@@ -193,9 +193,9 @@ if shopSellRate > 0 then
                         break ;
                     end
                     local to = findGoods(v);
-                    if to and to.price * shopSellRate * shopSellValidBySora > from.price then
+                    if to and to.price > from.price * shopSellValidBySora then
                         local sellPrice = GLOBAL.TUNING.ZY_STORE_SELL_LIST[to.name] or to.price or DEFAULT_SELL_PRICE;
-                        GLOBAL.TUNING.ZY_STORE_SELL_LIST[to.name] = math.min(sellPrice, to.price * shopSellRate * shopSellValidBySora)
+                        GLOBAL.TUNING.ZY_STORE_SELL_LIST[to.name] = math.min(sellPrice, from.price * shopSellValidBySora)
                     end
                     table.insert(b, v);
                 end
@@ -243,7 +243,7 @@ if shopSellRate > 0 then
                             or item:HasTag("bundle")) then
                         local info = findGoods(item.prefab)
                         if info then
-                            local sellPrice = GLOBAL.TUNING.ZY_STORE_SELL_LIST[info.name] or info.price * shopSellRate;
+                            local sellPrice = (GLOBAL.TUNING.ZY_STORE_SELL_LIST[info.name] or info.price) * shopSellRate;
                             getcoins = getcoins + stacksize * sellPrice
                         else
                             getcoins = getcoins + stacksize * DEFAULT_SELL_PRICE
@@ -271,8 +271,12 @@ if shopCoolDown > 0 then
     local oldFn = _G.MOD_RPC_HANDLERS[shopNameSpace][_G.MOD_RPC[shopNameSpace][ShopBuyKey].id]
     _G.MOD_RPC_HANDLERS[shopNameSpace][_G.MOD_RPC[shopNameSpace][ShopBuyKey].id] = function(player, k, goodstype, mode)
         local lastShopBuyTime = player.lastShopBuyTime or 0;
+        local lastTalkTime = player.lastTalkTime ;
         if GLOBAL.GetTime() - lastShopBuyTime < shopCoolDown then
-            player.components.talker:Say("购买冷却" .. shopCoolDown .. "秒")
+            if GLOBAL.GetTime() - lastShopBuyTime > 5 then
+                player.components.talker:Say("购买冷却" .. shopCoolDown .. "秒")
+                player.lastTalkTime = lastTalkTime;
+            end
             return ;
         end
         player.lastShopBuyTime = GLOBAL.GetTime();

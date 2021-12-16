@@ -155,11 +155,11 @@ if soraPackLimit then
             inst.components.sorapacker:SetCanPackFn(function(target, inst2)
                 if target:HasTag("multiplayer_portal") --天体门
                         or target.prefab == "pigking" --猪王
-                        or target.prefab == "beequeenhivegrown"--蜂王窝-底座
-                        or target.prefab == "statueglommer"--格罗姆雕像
-                        or target.prefab == "oasislake"--绿洲
+                        or target.prefab == "beequeenhivegrown" --蜂王窝-底座
+                        or target.prefab == "statueglommer" --格罗姆雕像
+                        or target.prefab == "oasislake" --绿洲
 
-                        or target.prefab == "elecourmaline"--电器台
+                        or target.prefab == "elecourmaline" --电器台
                         or target.prefab == "elecourmaline_keystone" --
 
                         or target.prefab == "myth_rhino_desk"--电器台
@@ -204,6 +204,35 @@ if soraPackFL then
     end)
 end
 
+local originalExpMax = 120;
+local soraRemoveExpLimit = 150;
+--根据选项给出一个等价的初始判断值
+local getInitExp = function(isOut)
+    return originalExpMax - (isOut and soraRemoveExpLimit * 0.5 or soraRemoveExpLimit);
+end
+
+local limit = {
+    kill = 50,
+    attack = 50,
+    emote = 20,
+}
+AddPrefabPostInit("sora", function(inst)
+    inst.FixExpVersion = 1
+    inst:WatchWorldState("startday", function()
+        local t = GLOBAL.TheWorld.state.cycles
+        local olddayexp = inst.soradayexp or {}-- getexppatch
+        inst.soradayexp = {}
+        for k, v in pairs(olddayexp) do
+            local maxexp = limit[k] or soraRemoveExpLimit
+            if k and v and v >= (maxexp) then
+                inst.soradayexp[k] = getInitExp(true)
+            else
+                inst.soradayexp[k] = getInitExp(false)
+            end
+        end
+        inst.soraday = t
+    end)
+end)
 
 
 

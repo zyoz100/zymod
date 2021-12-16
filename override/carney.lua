@@ -102,11 +102,9 @@ if carneyUseSetGold then
     end)
 
     AddPrefabPostInit("windyknife", function(inst)
-        if inst.components.trader then
-            inst.cantrader = TraderCount
-            inst.components.trader:SetAcceptTest(ItemTradeTest)
-            inst.components.trader.onaccept = OnGemGiven
-        end
+        inst.cantrader = TraderCount
+        inst.components.trader:SetAcceptTest(ItemTradeTest)
+        inst.components.trader.onaccept = OnGemGiven
     end)
 
 end

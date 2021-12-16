@@ -37,7 +37,6 @@ end
 
 if amyHeChengDisappear > 0 then
     -- 参照Yeo的代码 https://github.com/zYeoman/DST_mod/blob/master/postinit/c_lootdropper.lua
-    local CreateDisappearFn = require("disappear")
     local disappear = CreateDisappearFn(amyHeChengDisappear)
     AddPrefabPostInit("amy_hecheng", function(inst)
         disappear(inst);

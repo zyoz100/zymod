@@ -725,6 +725,21 @@ configuration_options = {
         default = 2
     },
     {
+        name = "randomSizeRemoveShadowMeteorToOther",
+        label = "蚁狮加强替换全图陨石雨为范围陨石雨",
+        hover = "只有一定范围吃陨石雨",
+        options = {
+            { description = "不修改", data = 0 },
+            { description = "10", data = 10 },
+            { description = "20", data = 20 },
+            { description = "50", data = 50 },
+            { description = "100", data = 100 },
+            { description = "200", data = 200 },
+            { description = "500", data = 500 },
+        },
+        default = 200
+    },
+    {
         name = "legion",
         label = "棱镜",
         options = { { description = "", data = "" } },

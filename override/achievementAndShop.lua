@@ -386,7 +386,7 @@ if achievementMaxBuy > 0 or achievementBuyCD > 0 then
                 end
             end
             local continue = true;
-            if player.components.seplayerstatus.coin >= math.ceil(iprice * discount * amount) and cost > 0 then
+            if player.components.seplayerstatus.coin >= math.ceil(iprice*discount*amount) and cost > 0 then
                 if achievementMaxBuyMode == 0 then
                     local maxBuy = math.ceil((1 + cycles * achievementMaxBuyRate) * achievementMaxBuy * 1000);
                     local dayOfBuy = (player.components.seplayerstatus.dayOfBuy or 0)
