@@ -22,6 +22,8 @@ if lazyTechKJKLimit then
                 valid = isClothing;
             elseif lazyTechKJKLimit == "weapon" then
                 valid = isWeapon;
+            elseif lazyTechKJKLimit == "null" then
+                valid = false;
             end
             if not valid and inst.components.lrhc_wxnj then
                 inst:RemoveComponent('lrhc_wxnj')

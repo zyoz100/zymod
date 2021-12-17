@@ -6,7 +6,7 @@ end)
 --carney 卡尼猫
 function zyPlayerSaveData:saveCarneyData(player)
     if player
-        and player.components
+            and player.components
             and player.components.carneystatus
     then
         self.carneyData = player.components.carneystatus:OnSave()
@@ -17,7 +17,28 @@ function zyPlayerSaveData:loadCarneyData(player)
     if player
             and player.components
             and player.components.carneystatus
-        and self.carneyData
+            and self.carneyData
+    then
+        player.components.carneystatus:OnLoad(self.carneyData)
+        self.carneyData = nil
+    end
+end
+
+--carney 卡尼猫
+function zyPlayerSaveData:saveCarneyData(player)
+    if player
+            and player.components
+            and player.components.carneystatus
+    then
+        self.carneyData = player.components.carneystatus:OnSave()
+    end
+end
+
+function zyPlayerSaveData:loadCarneyData(player)
+    if player
+            and player.components
+            and player.components.carneystatus
+            and self.carneyData
     then
         player.components.carneystatus:OnLoad(self.carneyData)
         self.carneyData = nil

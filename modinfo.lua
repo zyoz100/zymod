@@ -681,6 +681,7 @@ configuration_options = {
             { description = "仅对武器和衣物有效", data = "weaponAndClothing" },
             { description = "仅对衣物有效", data = "clothing" },
             { description = "仅对武器有效", data = "weapon" },
+            { description = "全部禁止", data = "null" },
         },
         default = "weaponAndClothing"
     },
