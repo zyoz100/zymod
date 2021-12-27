@@ -1,7 +1,7 @@
 name = "zy'mod"
 description = "服务器自用"
 author = "zy"
-version = "0.46"
+version = "0.48"
 
 forumthread = ""
 
@@ -102,6 +102,16 @@ configuration_options = {
         },
         default = false
     },
+    {--
+        name = "baseSavePlayerDataEX",
+        label = "保存玩家一些角色数据",
+        hover = "让一些角色换人时数据也会保留，比如猫的等级",
+        options = {
+            { description = "关闭", data = false },
+            { description = "开启", data = true },
+        },
+        default = false
+    },
     {
         name = "bugFix",
         label = "一些bug修正",
@@ -128,8 +138,8 @@ configuration_options = {
         default = true
     },
     {--
-        name = "bugFixFangXiong",
-        label = "防熊max",
+        name = "bugFixLevelAndAchievement",
+        label = "等级成就",
         options = {
             { description = "修正", data = true },
             { description = "不修正", data = false },
@@ -1080,6 +1090,38 @@ configuration_options = {
             { description = "不移除", data = true },
         },
         default = true
+    },
+    {
+        name = "levelAchievement",
+        label = "等级成就",
+        options = { { description = "", data = "" } },
+        default = ""
+    },
+    {
+        name = "LAMaxHSH",
+        label = "三围最大上限",
+        hover = "避免点太多成就",
+        options = {
+            { description = "原版", data = 0 },
+            { description = "1000", data = 1000 },
+            { description = "2000", data = 2000 },
+            { description = "5000", data = 5000 },
+            { description = "10000", data = 10000 },
+            { description = "20000", data = 20000 },
+        },
+        default = 10000
+    },
+    {
+        name = "LAGetMorePoints",
+        label = "成就获得更多成就点",
+        hover = "用来补偿一些阴间成就",
+        options = {
+            { description = "关闭", data = 0 },
+            { description = "稍微加强", data = 1 },
+            { description = "一般加强", data = 2 },
+            { description = "巨大加强", data = 4 },
+        },
+        default = 2
     },
 }
 --错误追踪

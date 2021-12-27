@@ -4,6 +4,7 @@ local baseBossGrowth = GetModConfigData("baseBossGrowth") or 2;
 local baseRandomDamageLow = GetModConfigData("baseRandomDamageLow") or 0;
 local baseDropDisappear = GetModConfigData("baseDropDisappear") or 0;
 local baseReduceAnnounce = GetModConfigData("baseReduceAnnounce") or 0;
+local baseSavePlayerDataEX = GetModConfigData("baseSavePlayerDataEX") or 0;
 if baseCombatCanAttackDeath then
     AddComponentPostInit("combat", function(self)
         -- 我是伞兵 不会hook
@@ -358,45 +359,23 @@ if baseDropDisappear > 0 then
     end)
 end
 
-if baseReduceAnnounce > 0 then
-    _G.announceList = {}
-    local net = GLOBAL.getmetatable(GLOBAL.TheNet)
-    local oldAnnounce = GLOBAL.TheNet.Announce
-    net.__index.Announce = function(Net, text, ...)
-        local valid = true;
-        local announceList = {}
-        for k, v in ipairs(_G.announceList) do
-            if _G.GetTime() - v.time < baseReduceAnnounce then
-                table.insert(announceList, v)
+if baseSavePlayerDataEX then
+    AddPrefabPostInit("world", function(inst)
+        if not TheWorld.ismastersim then
+            return
+        end
+        inst:AddComponent("zy_player_save_data")
+    end)
+
+    AddShardModRPCHandler( "zy", "player_save_data", function(userid,dataString)
+        if dataString and type(dataString) == "string" then
+            local zy_player_save_data = TheWorld and TheWorld.components.zy_player_save_data or nil
+            if zy_player_save_data and  zy_player_save_data.AddPlayerInfo ~= nil then
+                local success, b = pcall(json.decode,value)
+                if success and b ~= nil then
+                    zy_player_save_data:SetPlayerSaveDataByUserId(userid, b)
+                end
             end
-        end
-
-        for k, v in ipairs(announceList) do
-            if v.text == text then
-                valid = false
-            end
-        end
-        if valid then
-            _G.announceList = announceList
-            table.insert(_G.announceList, {
-                time = _G.GetTime(),
-                text = text,
-            })
-            SendModRPCToShard(SHARD_MOD_RPC["zy"]["announce"], text, _G.GetTime())
-            return oldAnnounce(Net, text, ...)
-        else
-            _G.announceList = announceList
-        end
-
-    end
-
-    AddShardModRPCHandler("zy", "announce", function(value, time)
-        if value and type(value) == "string" then
-            _G.announceList = _G.announceList or {};
-            table.insert(_G.announceList, {
-                time = time,
-                text = value,
-            })
         end
     end)
 end

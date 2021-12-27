@@ -171,6 +171,11 @@ if _G.isModEnableById("1909182187") then
     modimport("override/functionalMedal")
 end
 
+--functional medal
+if _G.isModEnableById("1840284484") then
+    modimport("override/levelAchievement")
+end
+
 
 
 

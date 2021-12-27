@@ -1,6 +1,7 @@
 local _G = GLOBAL;
 local bugFixXuaner = GetModConfigData("bugFixXuaner") or false
 local bugFixLy = GetModConfigData("bugFixLy") or false
+local bugFixLevelAndAchievement = GetModConfigData("bugFixLevelAndAchievement") or false
 --璇儿装备bug --xe_knife
 if bugFixXuaner and _G.isModEnableById("2582670245") then
     AddPrefabPostInit("xe_scabbard", function(inst)
@@ -212,4 +213,60 @@ if bugFixLy then
             end
         end
     end)
+end
+--等级成就
+if bugFixLevelAndAchievement and _G.isModEnableById("1840284484") then
+    AddComponentPostInit("blinkstaff", function(com)
+        if com.ResetSoundFX then
+            com:ResetSoundFX()
+        end
+
+        function com:ResetSoundFX()
+            com.presound = "dontstarve/common/staff_blink"
+            com.postsound = "dontstarve/common/staff_blink"
+        end
+
+        function com:SetSoundFX(presound, postsound)
+            com.presound = presound or com.presound
+            com.postsound = postsound or com.postsound
+        end
+    end)
+
+    AddComponentPostInit("levelsystem", function(levelsystem)
+        function levelsystem:onkilledother(inst)
+            inst:ListenForEvent("killed", function(killer, data)
+                if _G.KILLXP ~= true then return end
+                local victim = data.victim
+                if victim and victim.components.health and killer:HasTag("player") and
+                        not victim:HasTag("veggie") and
+                        not victim:HasTag("structure") and
+                        not victim:HasTag("wall") and
+                        not victim:HasTag("balloon") and
+                        not victim:HasTag("groundspike") and
+                        not victim:HasTag("smashable") and
+                        not victim:HasTag("companion") then
+                    local xp = math.floor(victim.components.health.maxhealth*0.1+0.5)
+                    if victim:HasTag("epic") then xp = math.floor(victim.components.health.maxhealth*0.25+0.5) end
+                    xp = math.min(xp,100000)
+                    local pos = Vector3(victim.Transform:GetWorldPosition())
+                    local ents = TheSim:FindEntities(pos.x,pos.y,pos.z, 15)
+
+                    local playercount = 0
+                    for k,v in pairs(ents) do
+                        if v:HasTag("player") then
+                            playercount = playercount + 1
+                        end
+                    end
+
+                    for k,v in pairs(ents) do
+                        if v:HasTag("player") then
+                            v.components.levelsystem:xpDoDelta(math.ceil(xp*_G.EXPMULT/playercount), v)
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+
+
 end
