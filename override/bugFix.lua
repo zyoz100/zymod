@@ -47,7 +47,7 @@ if bugFixXuaner and _G.isModEnableById("2582670245") then
         AddPrefabPostInit(v, function(fu)
             if fu and fu.components.finiteuses and fu.components.finiteuses.SetOnFinished then
                 fu.components.finiteuses:SetOnFinished(function(inst)
-                    local player = inst.components.inventoryitem:GetGrandattacker()
+                    local player = inst.components.inventoryitem:GetGrandOwner()
                     inst:Remove()
                     if player then
                         player:DoTaskInTime(_G.FRAMES, function(player)
