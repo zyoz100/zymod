@@ -18,9 +18,9 @@ local zyPlayerSaveData = Class(function(self, inst)
     end
 
     inst:ListenForEvent("ms_playerdespawnanddelete", function(inst, player)
-        local res = zyPlayerSaveData:SetPlayerSaveDataByPlayer(player)
+        local res = self:SetPlayerSaveDataByPlayer(player)
         if next(res) ~= nil then
-            local success, a = pcall(json.encode, save)
+            local success, a = pcall(json.encode, res)
             if success then
                 SendModRPCToShard(SHARD_MOD_RPC["zy"]["player_save_data"], player.userid, a)
             end

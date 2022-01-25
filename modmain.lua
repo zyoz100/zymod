@@ -176,6 +176,16 @@ if _G.isModEnableById("1840284484") then
     modimport("override/levelAchievement")
 end
 
+--elaina
+if _G.isModEnableById("2578692071") then
+    modimport("override/elaina")
+end
+
+
+if GLOBAL.TheNet:GetIsServer() then
+    -- 私人世界
+    modimport("scripts/misaka_private_world")
+end
 
 
 

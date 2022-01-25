@@ -18,6 +18,9 @@ if shopSellRate > 0 then
         end
         return res;
     end
+    GLOBAL.TUNING.ZY_STORE_SELL_LIST = {
+        mandrake=120
+    };
     local DEFAULT_SELL_PRICE = 2;
     if shopSellValidBySora > 0 then
 
@@ -183,7 +186,6 @@ if shopSellRate > 0 then
             turf_road = "turf_checkerfloor",
             turf_checkerfloor = "turf_road",
         }
-        GLOBAL.TUNING.ZY_STORE_SELL_LIST = {};
         for k, v in pairs(changelist) do
             local from = findGoods(k);
             if from then

@@ -1,7 +1,7 @@
 name = "zy'mod"
 description = "服务器自用"
 author = "zy"
-version = "0.48"
+version = "0.50"
 
 forumthread = ""
 
@@ -179,6 +179,16 @@ configuration_options = {
             { description = "附带200%", data = 2 },
         },
         default = 1,
+    },
+    {
+        name = "mythProtector",
+        label = "保护扩展",
+        hover = "加入竹林",
+        options = {
+            { description = "原版", data = false },
+            { description = "扩展", data = true },
+        },
+        default = true,
     },
     {
         name = "achievementAndShop",
@@ -1122,6 +1132,64 @@ configuration_options = {
             { description = "巨大加强", data = 4 },
         },
         default = 2
+    },{
+        name = "elaina",
+        label = "魔女伊蕾娜",
+        options = { { description = "", data = "" } },
+        default = ""
+    },
+    {
+        name = "elainaMagicMax",
+        label = "魔法值上限",
+        options = {
+            { description = "默认", data = 0 },
+            { description = "50", data = 50 },
+            { description = "200", data = 200 },
+            { description = "250", data = 250 },
+            { description = "400", data = 400 },
+        },
+        default = 200
+    },
+    {
+        name = "elainaCostBySelf",
+        label = "魔法代价均由魔女支付",
+        hover = "魔法的负面效果只有魔女才有,默认移除移速惩罚",
+        options = {
+            { description = "默认", data = false },
+            { description = "由魔女支付", data = true },
+        },
+        default = true
+    },
+    {
+        name = "elainaInheritRate",
+        label = "魔法继承魔女的属性倍率",
+        options = {
+            { description = "无", data = 0 },
+            { description = "10%", data = 0.1 },
+            { description = "15%", data = 0.15 },
+            { description = "20%", data = 0.2 },
+            { description = "30%", data = 0.3 },
+            { description = "50%", data = 0.5 },
+            { description = "75%", data = 0.75 },
+            { description = "100%", data = 1 },
+        },
+        default = 0.1
+    },
+    {
+        name = "elainaLostUsesToMedal",
+        label = "丢盔卸甲对勋章的效果削弱",
+        hover = "逃课还是讲点基本法",
+        options = {
+            { description = "不做改变（10%）", data = -1 },
+            { description = "不能对勋章使用", data = 0 },
+            { description = "0.1%", data = 0.001 },
+            { description = "0.5%", data = 0.005 },
+            { description = "1%", data = 0.01 },
+            { description = "2%", data = 0.02 },
+            { description = "4%", data = 0.04 },
+            { description = "5%", data = 0.05 },
+        },
+        default = 0.005
     },
 }
 --错误追踪
